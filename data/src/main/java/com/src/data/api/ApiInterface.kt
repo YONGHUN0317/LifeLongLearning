@@ -1,6 +1,6 @@
 package com.src.data.api
 
-import com.src.data.model.response.LifeLongRes
+import com.src.domain.model.LifeLongRes
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

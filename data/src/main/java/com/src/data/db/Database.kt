@@ -2,6 +2,7 @@ package com.src.data.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import com.src.data.model.LectureInfo
 
 /**
  * Room database declaration. Contains the LectureInfo entity and is versioned at 1.

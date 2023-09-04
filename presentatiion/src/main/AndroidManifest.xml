@@ -9,7 +9,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LifeLongLearning">
         <activity
-            android:name=".views.splash_first.SplashFirstActivity"
+            android:name="com.src.presentation.views.splash_first.SplashFirstActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.LifeLongLearning">
@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.presentatiion.views.splash_location.SplashLocationActivity" />
+            android:name="com.src.presentation.views.splash_location.SplashLocationActivity" />
     </application>
 
 </manifest>
