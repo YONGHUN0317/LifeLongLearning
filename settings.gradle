@@ -10,9 +10,11 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        mavenCentral()
+
     }
 }
 rootProject.name = "LifeLongLearning"
-include ':domain'
 include ':presentatiion'
+include ':domain'
 include ':data'

@@ -16,7 +16,7 @@ interface ApiInterface {
         @Query("pageNo") pageNo: Int,
         @Query("numOfRows") numOfRows: Int,
         @Query("type") type: String = "json"
-    ): LifeLongRes
+    ): com.src.domain.model.LifeLongRes
 
     companion object {
         private const val BASE_URL =

@@ -1,16 +1,19 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
-
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+def google_map_key = properties.getProperty('google_map_key')
 android {
     namespace 'com.src.presentatiion'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.src.presentatiion"
         minSdk 26
-        targetSdk 33
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
@@ -18,6 +21,11 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+        buildConfigField "String", "PUBLIC_APIKEY", properties["public_apikey"]
+        buildConfigField "String", "NAVER_APIKEY", properties["naver_apikey"]
+        manifestPlaceholders= [googleMapKey: google_map_key]
+
+
     }
 
     buildTypes {
@@ -44,15 +52,23 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+    buildToolsVersion '33.0.2'
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 dependencies {
+    implementation 'com.google.maps.android:maps-compose:2.14.0'
+    implementation 'com.google.maps.android:maps-compose-utils:2.14.0'
+    implementation 'androidx.navigation:navigation-compose:2.7.1'
+    implementation 'com.google.maps.android:maps-compose-widgets:2.14.0'
     implementation project(':data')
     implementation project(':domain')
     implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
     implementation 'androidx.activity:activity-compose:1.7.2'
-    implementation 'androidx.appcompat:appcompat:1.6.1'  // Replace 1.x.x with the latest version
+    implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.8.10"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.10"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.10"
