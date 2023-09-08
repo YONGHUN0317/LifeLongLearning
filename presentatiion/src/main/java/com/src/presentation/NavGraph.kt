@@ -19,7 +19,10 @@ fun MainContent() {
             SplashFirstView(navController)
         }
         composable("splashLocation") {
-            SplashLocationView()
+            SplashLocationView(navController)
+        }
+        composable("splashInterest") {
+            SplashLocationView(navController)
         }
     }
 }
