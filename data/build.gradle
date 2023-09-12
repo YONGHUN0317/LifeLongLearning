@@ -3,7 +3,9 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id "kotlin-parcelize"
 }
-
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+def google_map_key = properties.getProperty('google_map_key')
 android {
     namespace 'com.example.data2'
     compileSdk 34
@@ -14,6 +16,7 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
+        manifestPlaceholders= [googleMapKey: google_map_key]
     }
 
     buildTypes {

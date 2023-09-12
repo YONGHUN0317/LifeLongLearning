@@ -77,7 +77,6 @@ fun SplashFirstView(navController: NavController) {
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 50.dp)
                 .size(281.dp, 55.dp),
-            shape = MaterialTheme.shapes.small,
             interactionSource = interactionSource, // 이 부분을 추가합니다.
             colors = ButtonDefaults.buttonColors(
                 containerColor = bgColor,

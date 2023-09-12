@@ -1,18 +1,17 @@
 package com.src.presentation.views.splash_location
 
 import android.content.pm.PackageManager
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import android.Manifest.permission.ACCESS_FINE_LOCATION
-import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -20,6 +19,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
@@ -56,117 +57,124 @@ fun SplashLocationView(navController: NavController? = null) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-
     ) {
         val context = LocalContext.current
-
-        // Permission handling
-        val permissionLauncher = rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.RequestPermission()
-        ) { isGranted: Boolean ->
-            if (!isGranted) {
-                // Permission denied. Navigate to a different screen or finish the activity.
-                navController?.navigate("PermissionDeniedRoute")
-            }
+        val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(LocalContext.current)
+        val cameraPositionState = rememberCameraPositionState {
+            position = CameraPosition.fromLatLngZoom(LatLng(0.0, 0.0), 16f)
         }
-
-
-        val hasPermission = remember {
-            mutableStateOf(
-                ContextCompat.checkSelfPermission(
-                    context,
-                    ACCESS_FINE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED
-            )
-        }
-
+        val userLocation = remember { mutableStateOf<LatLng?>(null) }
 
         LaunchedEffect(Unit) {
-            if (!hasPermission.value) {
-                // Request permission
-                permissionLauncher.launch(ACCESS_FINE_LOCATION)
+            if (ContextCompat.checkSelfPermission(context, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return@LaunchedEffect
+            }
+            fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
+                val newLatLng = LatLng(location.latitude, location.longitude)
+                cameraPositionState.position = CameraPosition.fromLatLngZoom(newLatLng, 16f)
+                userLocation.value = newLatLng  // <-- Update user location
             }
         }
-        // Check permission before displaying map
-        if (hasPermission.value) {
-            // Google Map in the background
-            val latLng = LatLng(37.7387295, 127.0458908)
-            val cameraPositionState = rememberCameraPositionState {
-                position = CameraPosition.fromLatLngZoom(latLng, 15f)
-            }
-            // text
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-            ) {
-                Text(
-                    text = "현재 위치가 맞습니까?",
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        fontSize = 26.sp,
-                        fontWeight = FontWeight.Bold
-                    ),
-                    modifier = Modifier.padding(top = 30.dp, bottom = 15.dp, start = 30.dp)
-                )
 
-                GoogleMap(
-                    uiSettings = MapUiSettings(
-                        zoomControlsEnabled = false,
-                        myLocationButtonEnabled = true,
-                    ),
-                    properties = MapProperties(isMyLocationEnabled = true),
-                    modifier = Modifier.fillMaxSize(),
-                    cameraPositionState = cameraPositionState,
-                ) {
+        // text
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            Text(
+                text = "현재 위치가 맞습니까?",
+                style = MaterialTheme.typography.titleLarge.copy(
+                    fontSize = 26.sp,
+                    fontWeight = FontWeight.Bold
+                ),
+                modifier = Modifier.padding(top = 30.dp, bottom = 15.dp, start = 30.dp)
+            )
+
+            GoogleMap(
+                uiSettings = MapUiSettings(
+                    zoomControlsEnabled = false,
+                    mapToolbarEnabled = false
+                ),
+                properties = MapProperties(isMyLocationEnabled = true),
+                modifier = Modifier.fillMaxSize(),
+                cameraPositionState = cameraPositionState,
+            ) {
+                userLocation.value?.let { latLng ->
                     Marker(
-                        state = MarkerState(position = latLng),
+                        state = MarkerState(position = latLng),  // <-- Use user location
                         title = "현재 위치"
                     )
                 }
-
             }
 
-            // Confirm Button
-            val interactionSource = remember { MutableInteractionSource() }
-            val isPressed by interactionSource.collectIsPressedAsState()
-            val bgColor = if (isPressed) OrangeButtonPressed else OrangeButton
-            Button(
-                onClick = { /* navigate */ },
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .size(281.dp, 55.dp)
-                    .padding(bottom = 50.dp)
-                    .fillMaxWidth(),
-                interactionSource = interactionSource,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = bgColor,
-                    contentColor = Color.White,
-                )
-            ) {
-                Text(text = "선택", fontWeight = FontWeight.Bold, fontSize = 18.sp)
-            }
-
-            FloatingActionButton(
-                modifier = Modifier
-                    .padding(bottom = 160.dp, end = 16.dp)
-                    .background(Color.White)
-                    .align(alignment = Alignment.BottomEnd),
-                onClick = {},
-                contentColor = SemiBlue,
-                shape = CircleShape,
-                containerColor = Color.White
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.location),
-                    contentDescription = "Current Location",
-                )
-            }
-
-        } else {
-            Text("Location permission is required to display the map.")
         }
 
+        // Confirm Button
+        val interactionSource = remember { MutableInteractionSource() }
+        val isPressed by interactionSource.collectIsPressedAsState()
+        val bgColor = if (isPressed) OrangeButtonPressed else OrangeButton
+        Button(
+            onClick = {
+                navController?.navigate("splashInterest")
+            },
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .size(281.dp, 55.dp)
+                .offset(y = (-50).dp)
+                .fillMaxWidth(),
+            interactionSource = interactionSource,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = bgColor,
+                contentColor = Color.White,
+            )
+        ) {
+            Text(text = "선택", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+        }
+
+        FloatingActionButton(
+            modifier = Modifier
+                .padding(bottom = 160.dp, end = 16.dp)
+                .align(alignment = Alignment.BottomEnd),
+            onClick = {fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
+                val newLatLng = LatLng(location.latitude, location.longitude)
+                cameraPositionState.position = CameraPosition.fromLatLngZoom(newLatLng, 16f)
+            }},
+            contentColor = SemiBlue,
+            shape = CircleShape,
+            containerColor = Color.White
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.location),
+                contentDescription = "Current Location",
+            )
+        }
     }
 }
+
+/*@Composable
+fun SearchAddress() {
+    val viewModel: SplashLocationViewModel = hiltViewModel() // Get the ViewModel using Hilt
+    val searchResults by viewModel.searchResults.observeAsState(initial = emptyList())
+
+    val locationQuery = remember { mutableStateOf("") }
+
+    TextField(
+        value = locationQuery.value,
+        onValueChange = { newQuery ->
+            locationQuery.value = newQuery
+            viewModel.searchPlaces(newQuery)
+        },
+        label = { Text("Search location") },
+        modifier = Modifier.fillMaxWidth()
+    )
+
+    LazyColumn {
+        items(searchResults) { result ->
+            Text(text = result)
+        }
+    }
+}*/
+
 
 
 @Preview(showBackground = true)
