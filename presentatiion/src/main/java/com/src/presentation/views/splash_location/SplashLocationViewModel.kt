@@ -1,14 +1,15 @@
+/*
 package com.src.presentation.views.splash_location
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.src.domain.repository.PlacesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
-/*
 @HiltViewModel
 class SplashLocationViewModel @Inject constructor(private val placesRepository: PlacesRepository) : ViewModel() {
 
@@ -26,4 +27,5 @@ class SplashLocationViewModel @Inject constructor(private val placesRepository: 
             })
         // Dispose or add to a CompositeDisposable, cleared when ViewModel is cleared
     }
-}*/
+}
+*/

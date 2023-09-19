@@ -35,6 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.shashank.sony.fancytoastlib.FancyToast
 import com.src.presentatiion.R
 import com.src.presentation.ui.theme.LifeLongLearningTheme
 import com.src.presentation.ui.theme.OrangeButton
@@ -123,7 +124,7 @@ fun SplashInterestView(navController: NavController? = null) {
             onClick = {
                 if (selectedInterestCount.intValue < 2) {
                     scope.launch {
-                        Toast.makeText(context, "관심사 두개를 선택해주세요", Toast.LENGTH_SHORT).show()
+                        FancyToast.makeText(context,"관심사 두개를 선택해주세요",FancyToast.LENGTH_SHORT,FancyToast.ERROR,false).show()
                     }
                 } else {
                     // navigate

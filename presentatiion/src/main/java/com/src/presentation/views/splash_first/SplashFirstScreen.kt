@@ -1,5 +1,8 @@
 package com.src.presentation.views.splash_first
 
+import android.app.Activity
+import android.os.Looper
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -14,22 +17,46 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.shashank.sony.fancytoastlib.FancyToast
 import com.src.presentatiion.R
 import com.src.presentation.ui.theme.OrangeButton
 import com.src.presentation.ui.theme.OrangeButtonPressed
 
 @Composable
 fun SplashFirstView(navController: NavController) {
+    val context = LocalContext.current
+    val handler = remember { android.os.Handler(Looper.getMainLooper()) }
+    var (doubleBackToExitPressedOnce, _) = remember { mutableStateOf(false) }
+    BackHandler {
+        if (doubleBackToExitPressedOnce) {
+            // 이 부분에서 앱 종료 로직을 넣어주세요.
+            // 일반적으로는 Activity의 finish() 메서드를 호출합니다.
+            // 예: (context as Activity).finish()
+            (context as Activity).finish()
+        } else {
+            doubleBackToExitPressedOnce = true
+            FancyToast.makeText(context, "한번 더 뒤로가기를 하면 앱을 종료합니다.",FancyToast.LENGTH_SHORT,FancyToast.INFO, false).show()
+            // 2초 후 상태 초기화
+            handler.postDelayed(
+                {
+                    doubleBackToExitPressedOnce = false
+                },
+                2000
+            )
+        }
+    }
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier.padding(start = 30.dp)

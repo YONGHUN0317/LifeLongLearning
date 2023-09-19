@@ -1,6 +1,5 @@
 package com.src.data.di
 
-import com.src.data.api.GooglePlacesApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,7 +12,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class RemoteDataModule {
 
-    @Provides
+    /*@Provides
     @Singleton
     fun provideGooglePlacesApi(): GooglePlacesApi {
         val retrofit = Retrofit.Builder()
@@ -22,5 +21,5 @@ class RemoteDataModule {
             .build()
 
         return retrofit.create(GooglePlacesApi::class.java)
-    }
+    }*/
 }
