@@ -3,6 +3,7 @@ package com.src.presentation.views.splash_location
 import android.content.pm.PackageManager
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -33,6 +35,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -41,6 +44,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.zIndex
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import com.google.android.gms.location.LocationServices
@@ -84,6 +89,7 @@ fun SplashLocationView(navController: NavController? = null) {
         position = CameraPosition.fromLatLngZoom(LatLng(0.0, 0.0), 16f)
     }
     val userLocation = remember { mutableStateOf<LatLng?>(null) }
+    var showDialog by remember { mutableStateOf(false) }
 
 
     fun fetchPlaceDetails(placeId: String) {
@@ -138,14 +144,11 @@ fun SplashLocationView(navController: NavController? = null) {
         }
     }
 
-
     Box(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
+            modifier = Modifier.fillMaxSize()
         ) {
             Text(
                 text = "현재 위치가 맞습니까?",
@@ -155,39 +158,6 @@ fun SplashLocationView(navController: NavController? = null) {
                 ),
                 modifier = Modifier.padding(top = 30.dp, bottom = 15.dp, start = 30.dp)
             )
-            Box(
-                modifier = Modifier
-                    .fillMaxSize() // 사이즈 변경
-            ) {
-                TextField(
-                    value = query,
-                    onValueChange = { newValue ->
-                        query = newValue
-                    },
-                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Search),
-                    keyboardActions = KeyboardActions(
-                        onSearch = {
-                            if (suggestions.isNotEmpty()) {
-                                val firstSuggestionId = suggestions[0].placeId
-                                fetchPlaceDetails(firstSuggestionId)
-                            }
-                        }
-                    )
-                )
-
-                LazyColumn {
-                    items(suggestions) { suggestion ->
-                        Text(
-                            text = suggestion.getFullText(null).toString(),
-                            modifier = Modifier.clickable {
-                                fetchPlaceDetails(suggestion.placeId)
-                            }
-                        )
-                    }
-                }
-            }
-
-
 
             GoogleMap(
                 uiSettings = MapUiSettings(
@@ -196,7 +166,8 @@ fun SplashLocationView(navController: NavController? = null) {
                     myLocationButtonEnabled = false
                 ),
                 properties = MapProperties(isMyLocationEnabled = true),
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .zIndex(1f),
                 cameraPositionState = cameraPositionState,
             ) {
                 selectedCoordinates?.let { coordinates ->
@@ -212,6 +183,27 @@ fun SplashLocationView(navController: NavController? = null) {
                 }
             }
 
+        }
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Image(
+                painter = painterResource(R.drawable.search_bar),
+                contentDescription = null,
+                modifier = Modifier
+                    .align(Alignment.TopCenter) // Aligns to center horizontally and top vertically
+                    .offset(y = 100.dp) // Your existing vertical padding as an offset
+                    .shadow( // 그림자 효과 추가
+                        elevation = 4.dp, // 그림자의 높이
+                        shape = RoundedCornerShape(4.dp) // 모서리가 둥근 모양의 그림자
+                    )
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }
+                    ) {
+                        showDialog = true
+                    }
+            )
         }
 
         // Confirm Button
@@ -255,6 +247,42 @@ fun SplashLocationView(navController: NavController? = null) {
                 painter = painterResource(id = R.drawable.location),
                 contentDescription = "Current Location",
             )
+        }
+    }
+
+    if (showDialog) {
+        Dialog(onDismissRequest = { showDialog = false }) {
+            Column {
+                TextField(
+                    modifier = Modifier.zIndex(2f),
+                    value = query,
+                    onValueChange = { newValue ->
+                        query = newValue
+                    },
+                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Search),
+                    keyboardActions = KeyboardActions(
+                        onSearch = {
+                            if (suggestions.isNotEmpty()) {
+                                val firstSuggestionId = suggestions[0].placeId
+                                fetchPlaceDetails(firstSuggestionId)
+                            }
+                        }
+                    )
+                )
+                LazyColumn(
+                    modifier = Modifier.zIndex(2f)
+                ) {
+                    items(suggestions) { suggestion ->
+                        Text(
+                            text = suggestion.getFullText(null).toString(),
+                            modifier = Modifier.clickable {
+                                fetchPlaceDetails(suggestion.placeId)
+                                showDialog = false
+                            }
+                        )
+                    }
+                }
+            }
         }
     }
 }
