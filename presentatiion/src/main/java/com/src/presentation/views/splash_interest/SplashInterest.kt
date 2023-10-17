@@ -70,8 +70,8 @@ fun SplashInterestView(navController: NavController? = null) {
 
 
             val interests = listOf("프로그래밍", "여행", "음악", "영화", "스포츠",
-                "요리", "책", "영어", "역사", "투자", "심리학", "건강",
-                "사진", "식물", "패션") // 여기에 관심사를 추가하세요
+                "요리", "책", "영어", "역사", "투자", "심리", "운동",
+                "사진", "원예", "패션")
 
             val rows = listOf(
                 interests.subList(0, 3),
@@ -127,7 +127,7 @@ fun SplashInterestView(navController: NavController? = null) {
                         FancyToast.makeText(context,"관심사 두개를 선택해주세요",FancyToast.LENGTH_SHORT,FancyToast.ERROR,false).show()
                     }
                 } else {
-                    // navigate
+                    navController?.navigate("main")
                 }
             },
             modifier = Modifier

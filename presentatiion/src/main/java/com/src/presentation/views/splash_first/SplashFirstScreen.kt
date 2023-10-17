@@ -47,7 +47,13 @@ fun SplashFirstView(navController: NavController) {
             (context as Activity).finish()
         } else {
             doubleBackToExitPressedOnce = true
-            FancyToast.makeText(context, "한번 더 뒤로가기를 하면 앱을 종료합니다.",FancyToast.LENGTH_SHORT,FancyToast.INFO, false).show()
+            FancyToast.makeText(
+                context,
+                "한번 더 뒤로가기를 하면 앱을 종료합니다.",
+                FancyToast.LENGTH_SHORT,
+                FancyToast.INFO,
+                false
+            ).show()
             // 2초 후 상태 초기화
             handler.postDelayed(
                 {
@@ -88,7 +94,7 @@ fun SplashFirstView(navController: NavController) {
         }
         Image(
             painter = painterResource(id = R.drawable.splash_first),
-            contentDescription = "Main photo",
+            contentDescription = "splashs photo",
             modifier = Modifier
                 .align(Alignment.Center)
                 .size(268.dp, 372.dp),
@@ -98,8 +104,7 @@ fun SplashFirstView(navController: NavController) {
         val isPressed by interactionSource.collectIsPressedAsState()
         val bgColor = if (isPressed) OrangeButtonPressed else OrangeButton
         Button(
-
-            onClick = {navController.navigate("splashLocation") },
+            onClick = { navController.navigate("splashLocation") },
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 50.dp)

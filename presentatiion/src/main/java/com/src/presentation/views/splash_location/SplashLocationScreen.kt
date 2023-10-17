@@ -191,9 +191,9 @@ fun SplashLocationView(navController: NavController? = null) {
                 painter = painterResource(R.drawable.search_bar),
                 contentDescription = null,
                 modifier = Modifier
-                    .align(Alignment.TopCenter) // Aligns to center horizontally and top vertically
-                    .offset(y = 100.dp) // Your existing vertical padding as an offset
-                    .shadow( // 그림자 효과 추가
+                    .align(Alignment.TopCenter)
+                    .offset(y = 100.dp)
+                    .shadow(
                         elevation = 4.dp, // 그림자의 높이
                         shape = RoundedCornerShape(4.dp) // 모서리가 둥근 모양의 그림자
                     )

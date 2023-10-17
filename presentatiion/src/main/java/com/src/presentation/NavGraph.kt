@@ -5,6 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.src.presentation.views.allow.AllowScreen
+import com.src.presentation.views.main.MainView
 import com.src.presentation.views.splash_first.SplashFirstView
 import com.src.presentation.views.splash_interest.SplashInterestView
 import com.src.presentation.views.splash_location.SplashLocationView
@@ -26,8 +27,8 @@ fun MainContent() {
         composable("splashInterest") {
             SplashInterestView(navController)
         }
+        composable("main") {
+            MainView()
+        }
     }
-
-
-
 }
