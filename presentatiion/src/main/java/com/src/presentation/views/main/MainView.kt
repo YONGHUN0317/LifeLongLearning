@@ -3,9 +3,11 @@ package com.src.presentation.views.main
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,13 +16,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -32,7 +37,6 @@ import com.src.presentatiion.R
 import com.src.presentation.ui.theme.LifeLongLearningTheme
 
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MainView() {
 
@@ -90,7 +94,10 @@ fun MainView() {
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.weight(1f) // Row의 가로 길이를 1/3 가져간다
+                    modifier = Modifier
+                        .weight(1f) // Row의 가로 길이를 1/3 가져간다.
+                        .shadow(elevation = 2.dp)
+                
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.cooking),
@@ -145,87 +152,70 @@ fun MainView() {
                 modifier = Modifier.padding(top = 10.dp),
                 style = TextStyle(fontSize = 24.sp)
             )
-
-            val pageCount = 4
-            val pagerState = rememberPagerState(pageCount = {
-                pageCount
-            })
-            HorizontalPager(
-                state = pagerState
-            ) { page ->
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 20.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.weight(1f) // Row의 가로 길이를 1/3 가져간다
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.cooking),
-                            contentDescription = "interesting1",
-                            modifier = Modifier
-                                .size(100.dp, 100.dp)
-                        )
-                        Text(
-                            text = "관심사1",
-                            modifier = Modifier.padding(top = 4.dp)
-                        )
-                    }
-
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.weight(1f) // Row의 가로 길이를 1/3 가져간다
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.english),
-                            contentDescription = "interesting2",
-                            modifier = Modifier
-                                .size(100.dp, 100.dp)
-
-                        )
-                        Text(
-                            text = "관심사2",
-                            modifier = Modifier.padding(top = 4.dp)
-                        )
-                    }
-
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.weight(1f) // Row의 가로 길이를 1/3 가져간다
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.exercise),
-                            contentDescription = "interesting3",
-                            modifier = Modifier
-                                .size(100.dp, 100.dp)
-
-                        )
-                        Text(
-                            text = "관심사3",
-                            modifier = Modifier.padding(top = 4.dp)
-                        )
-                    }
-                }
-            }
             Row(
-                Modifier
-                    .height(50.dp)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
+                modifier = Modifier
+                    .horizontalScroll(rememberScrollState())
+                    .padding(top = 20.dp)
             ) {
-                repeat(pageCount) { iteration ->
-                    val color =
-                        if (pagerState.currentPage == iteration) Color.DarkGray else Color.LightGray
-                    Box(
-                        modifier = Modifier
-                            .padding(top = 4.dp , end = 2.dp, start = 2.dp)
-                            .clip(CircleShape)
-                            .background(color)
-                            .size(17.dp)
 
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(end = 16.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.cooking),
+                        contentDescription = "interesting1",
+                        modifier = Modifier.size(100.dp, 100.dp)
+                    )
+                    Text(
+                        text = "관심사1",
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                }
+
+
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(end = 16.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.english),
+                        contentDescription = "interesting2",
+                        modifier = Modifier.size(100.dp, 100.dp)
+                    )
+                    Text(
+                        text = "관심사2",
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                }
+
+
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(end = 16.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.exercise),
+                        contentDescription = "interesting3",
+                        modifier = Modifier.size(100.dp, 100.dp)
+                    )
+                    Text(
+                        text = "관심사3",
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                }
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(end = 16.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.english),
+                        contentDescription = "interesting2",
+                        modifier = Modifier.size(100.dp, 100.dp)
+                    )
+                    Text(
+                        text = "관심사4",
+                        modifier = Modifier.padding(top = 4.dp)
                     )
                 }
             }

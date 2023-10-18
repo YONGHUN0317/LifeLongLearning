@@ -92,4 +92,6 @@ dependencies {
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.2'
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
+    implementation "androidx.paging:paging-compose:3.3.0-alpha02"
+
 }
