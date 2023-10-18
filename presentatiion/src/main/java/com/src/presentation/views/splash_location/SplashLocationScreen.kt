@@ -78,6 +78,7 @@ fun SplashLocationView(navController: NavController? = null) {
     var query by remember { mutableStateOf("") }
     var suggestions by remember { mutableStateOf(listOf<AutocompletePrediction>()) }
     var selectedCoordinates by remember { mutableStateOf<Pair<Double, Double>?>(null) }
+    var currentLocation by remember { mutableStateOf<Pair<Double, Double>?>(null) }
     val context = LocalContext.current
     if (!Places.isInitialized()) {
         Places.initialize(context, google_map_key, Locale.getDefault())
@@ -90,6 +91,7 @@ fun SplashLocationView(navController: NavController? = null) {
     }
     val userLocation = remember { mutableStateOf<LatLng?>(null) }
     var showDialog by remember { mutableStateOf(false) }
+
 
 
     fun fetchPlaceDetails(placeId: String) {
@@ -119,6 +121,7 @@ fun SplashLocationView(navController: NavController? = null) {
             val newLatLng = LatLng(location.latitude, location.longitude)
             cameraPositionState.position = CameraPosition.fromLatLngZoom(newLatLng, 16f)
             userLocation.value = newLatLng
+            currentLocation = Pair(location.latitude, location.longitude)  // Adding this line
         }
     }
 
@@ -178,8 +181,25 @@ fun SplashLocationView(navController: NavController? = null) {
                                 coordinates.second
                             )
                         ),
-                        title = "선택한 위치"
+                        title = "검색한 위치"
+
+
                     )
+                }
+                currentLocation?. let { currentLocation ->
+                    Marker(
+                        state = MarkerState(
+                            position = LatLng(
+                                currentLocation.first,
+                                currentLocation.second
+                            )
+                        ),
+                        title = "현재 위치",
+
+
+
+                    )
+                    
                 }
             }
 
@@ -237,6 +257,7 @@ fun SplashLocationView(navController: NavController? = null) {
                     val newLatLng = LatLng(location.latitude, location.longitude)
                     cameraPositionState.position = CameraPosition.fromLatLngZoom(newLatLng, 16f)
                     userLocation.value = newLatLng
+                    currentLocation = Pair(location.latitude, location.longitude)  // Adding this line
                 }
             },
             contentColor = SemiBlue,

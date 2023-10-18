@@ -29,10 +29,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.shashank.sony.fancytoastlib.FancyToast
 import com.src.presentatiion.R
 import com.src.presentation.ui.theme.OrangeButton
 import com.src.presentation.ui.theme.OrangeButtonPressed
+import io.github.muddz.styleabletoast.StyleableToast
 
 @Composable
 fun SplashFirstView(navController: NavController) {
@@ -47,13 +47,7 @@ fun SplashFirstView(navController: NavController) {
             (context as Activity).finish()
         } else {
             doubleBackToExitPressedOnce = true
-            FancyToast.makeText(
-                context,
-                "한번 더 뒤로가기를 하면 앱을 종료합니다.",
-                FancyToast.LENGTH_SHORT,
-                FancyToast.INFO,
-                false
-            ).show()
+            StyleableToast.makeText(context, "한번 더 뒤로가기를 선택할 경우 앱을 종료합니다.", R.style.error).show()
             // 2초 후 상태 초기화
             handler.postDelayed(
                 {

@@ -1,6 +1,5 @@
 package com.src.presentation.views.splash_interest
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -35,13 +34,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.shashank.sony.fancytoastlib.FancyToast
 import com.src.presentatiion.R
 import com.src.presentation.ui.theme.LifeLongLearningTheme
 import com.src.presentation.ui.theme.OrangeButton
 import com.src.presentation.ui.theme.OrangeButtonPressed
 import com.src.presentation.ui.theme.Selected
 import com.src.presentation.ui.theme.UnSelected
+import io.github.muddz.styleabletoast.StyleableToast
 import kotlinx.coroutines.launch
 
 @Composable
@@ -124,7 +123,7 @@ fun SplashInterestView(navController: NavController? = null) {
             onClick = {
                 if (selectedInterestCount.intValue < 2) {
                     scope.launch {
-                        FancyToast.makeText(context,"관심사 두개를 선택해주세요",FancyToast.LENGTH_SHORT,FancyToast.ERROR,false).show()
+                        StyleableToast.makeText(context, "관심사 두개를 골라주세요.", R.style.error).show()
                     }
                 } else {
                     navController?.navigate("main")
