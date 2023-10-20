@@ -1,23 +1,21 @@
 package com.src.presentation.views.main
 
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -25,7 +23,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -79,6 +76,7 @@ fun MainView() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 10.dp, end = 10.dp, top = 20.dp)
+
             )
             Text(
                 text = "관심사 강의",
@@ -87,146 +85,111 @@ fun MainView() {
 
             )
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 20.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
+
             ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
-                        .weight(1f) // Row의 가로 길이를 1/3 가져간다.
-                        .shadow(elevation = 2.dp)
-                
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.cooking),
-                        contentDescription = "interesting1",
-                        modifier = Modifier
-                            .size(100.dp, 100.dp)
-                    )
-                    Text(
-                        text = "관심사1",
-                        modifier = Modifier.padding(top = 4.dp)
-                    )
-                }
-
-                // 관심사2에 대한 Image와 설명
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.weight(1f) // Row의 가로 길이를 1/3 가져간다
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.english),
-                        contentDescription = "interesting2",
-                        modifier = Modifier
-                            .size(100.dp, 100.dp)
-
-                    )
-                    Text(
-                        text = "관심사2",
-                        modifier = Modifier.padding(top = 4.dp)
-                    )
-                }
-
-                // 관심사3에 대한 Image와 설명
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.weight(1f) // Row의 가로 길이를 1/3 가져간다
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.exercise),
-                        contentDescription = "interesting3",
-                        modifier = Modifier
-                            .size(100.dp, 100.dp)
-
-                    )
-                    Text(
-                        text = "관심사3",
-                        modifier = Modifier.padding(top = 4.dp)
-                    )
-                }
+                Card(name = "요리", imageRes = R.drawable.example)
+                Card(name = "영어", imageRes = R.drawable.english)
+                Card(name = "음악", imageRes = R.drawable.music)
             }
-            Text(
-                text = "추천 강의",
-                modifier = Modifier.padding(top = 10.dp),
-                style = TextStyle(fontSize = 24.sp)
-            )
-            Row(
-                modifier = Modifier
-                    .horizontalScroll(rememberScrollState())
-                    .padding(top = 20.dp)
+        }
+        Text(
+            text = "추천 강의",
+            modifier = Modifier.padding(top = 10.dp),
+            style = TextStyle(fontSize = 24.sp)
+        )
+        Row(
+            modifier = Modifier
+                .horizontalScroll(rememberScrollState())
+                .padding(top = 20.dp)
+        ) {
+
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(end = 16.dp)
             ) {
-
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(end = 16.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.cooking),
-                        contentDescription = "interesting1",
-                        modifier = Modifier.size(100.dp, 100.dp)
-                    )
-                    Text(
-                        text = "관심사1",
-                        modifier = Modifier.padding(top = 4.dp)
-                    )
-                }
-
-
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(end = 16.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.english),
-                        contentDescription = "interesting2",
-                        modifier = Modifier.size(100.dp, 100.dp)
-                    )
-                    Text(
-                        text = "관심사2",
-                        modifier = Modifier.padding(top = 4.dp)
-                    )
-                }
-
-
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(end = 16.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.exercise),
-                        contentDescription = "interesting3",
-                        modifier = Modifier.size(100.dp, 100.dp)
-                    )
-                    Text(
-                        text = "관심사3",
-                        modifier = Modifier.padding(top = 4.dp)
-                    )
-                }
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(end = 16.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.english),
-                        contentDescription = "interesting2",
-                        modifier = Modifier.size(100.dp, 100.dp)
-                    )
-                    Text(
-                        text = "관심사4",
-                        modifier = Modifier.padding(top = 4.dp)
-                    )
-                }
+                Image(
+                    painter = painterResource(id = R.drawable.cooking),
+                    contentDescription = "interesting1",
+                    modifier = Modifier.size(100.dp, 100.dp)
+                )
+                Text(
+                    text = "관심사1",
+                    modifier = Modifier.padding(top = 4.dp)
+                )
+            }
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(end = 16.dp)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.english),
+                    contentDescription = "interesting2",
+                    modifier = Modifier.size(100.dp, 100.dp)
+                )
+                Text(
+                    text = "관심사2",
+                    modifier = Modifier.padding(top = 4.dp)
+                )
+            }
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(end = 16.dp)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.exercise),
+                    contentDescription = "interesting3",
+                    modifier = Modifier.size(100.dp, 100.dp)
+                )
+                Text(
+                    text = "관심사3",
+                    modifier = Modifier.padding(top = 4.dp)
+                )
+            }
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(end = 16.dp)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.english),
+                    contentDescription = "interesting2",
+                    modifier = Modifier.size(100.dp, 100.dp)
+                )
+                Text(
+                    text = "관심사4",
+                    modifier = Modifier.padding(top = 4.dp)
+                )
             }
         }
     }
 }
 
+@Composable
+fun Card(name: String, @DrawableRes imageRes: Int) {
+    Box(
+        modifier = Modifier
+            .padding(4.dp)
+            .width(100.dp)
+            .height(130.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .background(Color.White)
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxSize().padding(8.dp)
+        ) {
+            Image(painter = painterResource(id = imageRes), contentDescription = null, modifier = Modifier.size(100.dp, 100.dp).fillMaxSize().background(color = Color.DarkGray))
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(text = name, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+        }
+    }
+}
+
+
 @Preview(showBackground = true)
 @Composable
 fun SplashLocationPreView() {
-    LifeLongLearningTheme() {
+    LifeLongLearningTheme {
         MainView()
     }
 }

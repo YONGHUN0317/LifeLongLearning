@@ -13,7 +13,5 @@ class MainActivity : ComponentActivity() {
             MainContent()
         }
     }
-
-
 }
 
