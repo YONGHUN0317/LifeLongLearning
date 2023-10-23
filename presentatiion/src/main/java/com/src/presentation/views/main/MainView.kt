@@ -1,5 +1,6 @@
 package com.src.presentation.views.main
 
+import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -24,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -88,9 +90,9 @@ fun MainView() {
                 horizontalArrangement = Arrangement.SpaceBetween,
 
             ) {
-                Card(name = "요리", imageRes = R.drawable.example)
-                Card(name = "영어", imageRes = R.drawable.english)
-                Card(name = "음악", imageRes = R.drawable.music)
+                Card(name = "요리", imageRes = R.drawable.cooking, colorResource(id = R.color.cooking))
+                Card(name = "영어", imageRes = R.drawable.english, colorResource(id = R.color.cooking))
+                Card(name = "음악", imageRes = R.drawable.music, colorResource(id = R.color.cooking))
             }
         }
         Text(
@@ -165,7 +167,7 @@ fun MainView() {
 }
 
 @Composable
-fun Card(name: String, @DrawableRes imageRes: Int) {
+fun Card(name: String, @DrawableRes imageRes: Int, backgroundColor : Color) {
     Box(
         modifier = Modifier
             .padding(4.dp)
@@ -178,7 +180,7 @@ fun Card(name: String, @DrawableRes imageRes: Int) {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxSize().padding(8.dp)
         ) {
-            Image(painter = painterResource(id = imageRes), contentDescription = null, modifier = Modifier.size(100.dp, 100.dp).fillMaxSize().background(color = Color.DarkGray))
+            Image(painter = painterResource(id = imageRes), contentDescription = null, modifier = Modifier.size(100.dp, 100.dp).fillMaxSize().background(color = backgroundColor))
             Spacer(modifier = Modifier.height(4.dp))
             Text(text = name, fontSize = 14.sp, fontWeight = FontWeight.Bold)
         }

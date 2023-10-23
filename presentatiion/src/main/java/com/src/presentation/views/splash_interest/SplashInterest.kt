@@ -19,8 +19,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -44,9 +43,10 @@ import io.github.muddz.styleabletoast.StyleableToast
 import kotlinx.coroutines.launch
 
 @Composable
-fun SplashInterestView(navController: NavController? = null) {
-    val selectedInterestCount = remember { mutableIntStateOf(0) }
-    val selectedInterests = remember { mutableStateOf(listOf<String>()) }
+fun SplashInterestView(navController: NavController? = null, viewModel: SplashInterestViewModel) {
+    val selectedInterests by viewModel.selectedInterests.observeAsState(setOf())
+    val selectedInterestCount = selectedInterests.size
+
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
@@ -87,16 +87,14 @@ fun SplashInterestView(navController: NavController? = null) {
                     row.forEach { interest ->
                         InterestButton(
                             text = interest,
-                            selected = selectedInterests.value.contains(interest),
+                            selected = selectedInterests.contains(interest),
                             onSelected = {
-                                if (selectedInterestCount.intValue < 2) {
-                                    selectedInterestCount.intValue += 1
-                                    selectedInterests.value = selectedInterests.value + interest
+                                if (selectedInterestCount < 2) {
+                                    viewModel.updateSelectedInterests(interest, true)
                                 }
                             },
                             onDeselected = {
-                                selectedInterestCount.intValue -= 1
-                                selectedInterests.value = selectedInterests.value - interest
+                                viewModel.updateSelectedInterests(interest, false)
                             },
                             modifier = Modifier.padding(4.dp)
                         )
@@ -121,7 +119,7 @@ fun SplashInterestView(navController: NavController? = null) {
 
         Button(
             onClick = {
-                if (selectedInterestCount.intValue < 2) {
+                if (selectedInterestCount < 2) {
                     scope.launch {
                         StyleableToast.makeText(context, "관심사 두개를 골라주세요.", R.style.error).show()
                     }
@@ -130,7 +128,7 @@ fun SplashInterestView(navController: NavController? = null) {
                 }
             },
             modifier = Modifier
-                .align(Alignment.BottomCenter)  // Now it is inside a Box
+                .align(Alignment.BottomCenter)
                 .size(281.dp, 55.dp)
                 .offset(y = (-50).dp),
             interactionSource = interactionSource,
@@ -170,14 +168,17 @@ fun InterestButton(
     ) {
         Text(text = text)
     }
+
 }
 
 
 
-@Preview(showBackground = true)
+
+
+/*@Preview(showBackground = true)
 @Composable
 fun SplashLocationPreView() {
     LifeLongLearningTheme() {
         SplashInterestView()
     }
-}
+}*/

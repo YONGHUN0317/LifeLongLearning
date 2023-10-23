@@ -9,6 +9,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="red">#FF0000</color>
     <color name="yellow">#EED202</color>
-    <color name="back">#CE687D</color>
+    <color name="cooking">#CE687D</color>
+    <color name="earning">#6D6363</color>
 
 </resources>
