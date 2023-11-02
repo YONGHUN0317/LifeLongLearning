@@ -9,7 +9,22 @@
     <color name="white">#FFFFFFFF</color>
     <color name="red">#FF0000</color>
     <color name="yellow">#EED202</color>
+
+    <!--   card background-->
     <color name="cooking">#CE687D</color>
     <color name="earning">#6D6363</color>
-
+    <color name="movie">#E7E7E7</color>
+    <color name="exercise">#E8DBDB</color>
+    <color name="english">#E8DBDB</color>
+    <color name="fashion">#D1C4E9</color>
+    <color name="photographer">#B2DFDB</color>
+    <color name="reading">#A5D6A7</color>
+    <color name="sport">#B388FF</color>
+    <color name="travel">#42A5F5</color>
+    <color name="psychology">#00ACC1</color>
+    <color name="music">#26A69A</color>
+    <color name="magazine">#66BB6A</color>
+    <color name="horticulture">#E3F2FD</color>
+    <color name="history">#E3F2FD</color>
+    <color name="programming">#80DEEA</color>
 </resources>

@@ -41,9 +41,6 @@ fun SplashFirstView(navController: NavController) {
     var (doubleBackToExitPressedOnce, _) = remember { mutableStateOf(false) }
     BackHandler {
         if (doubleBackToExitPressedOnce) {
-            // 이 부분에서 앱 종료 로직을 넣어주세요.
-            // 일반적으로는 Activity의 finish() 메서드를 호출합니다.
-            // 예: (context as Activity).finish()
             (context as Activity).finish()
         } else {
             doubleBackToExitPressedOnce = true

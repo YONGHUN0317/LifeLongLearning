@@ -29,12 +29,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.src.presentatiion.R
-import com.src.presentation.ui.theme.LifeLongLearningTheme
 import com.src.presentation.ui.theme.OrangeButton
 import com.src.presentation.ui.theme.OrangeButtonPressed
 import com.src.presentation.ui.theme.Selected
@@ -43,7 +42,8 @@ import io.github.muddz.styleabletoast.StyleableToast
 import kotlinx.coroutines.launch
 
 @Composable
-fun SplashInterestView(navController: NavController? = null, viewModel: SplashInterestViewModel) {
+fun SplashInterestView(navController: NavController, viewModel: SplashInterestViewModel = hiltViewModel()) {
+    //SplashInterestViewModel
     val selectedInterests by viewModel.selectedInterests.observeAsState(setOf())
     val selectedInterestCount = selectedInterests.size
 
@@ -59,15 +59,13 @@ fun SplashInterestView(navController: NavController? = null, viewModel: SplashIn
             modifier = Modifier.fillMaxSize()
         ) {
             Text(
-                text = "관심사 두개를 선택하세요 !",
+                text = "관심사 3개를 선택하세요 !",
                 style = MaterialTheme.typography.titleLarge.copy(
                     fontSize = 26.sp,
                     fontWeight = FontWeight.Bold
                 ),
                 modifier = Modifier.padding(top = 30.dp, bottom = 15.dp, start = 30.dp)
             )
-
-
             val interests = listOf("프로그래밍", "여행", "음악", "영화", "스포츠",
                 "요리", "책", "영어", "역사", "투자", "심리", "운동",
                 "사진", "원예", "패션")
@@ -89,7 +87,7 @@ fun SplashInterestView(navController: NavController? = null, viewModel: SplashIn
                             text = interest,
                             selected = selectedInterests.contains(interest),
                             onSelected = {
-                                if (selectedInterestCount < 2) {
+                                if (selectedInterestCount < 3) {
                                     viewModel.updateSelectedInterests(interest, true)
                                 }
                             },
@@ -119,12 +117,12 @@ fun SplashInterestView(navController: NavController? = null, viewModel: SplashIn
 
         Button(
             onClick = {
-                if (selectedInterestCount < 2) {
+                if (selectedInterestCount < 3) {
                     scope.launch {
-                        StyleableToast.makeText(context, "관심사 두개를 골라주세요.", R.style.error).show()
+                        StyleableToast.makeText(context, "관심사 3개를 골라주세요.", R.style.error).show()
                     }
                 } else {
-                    navController?.navigate("main")
+                    navController.navigate("main")
                 }
             },
             modifier = Modifier
@@ -168,13 +166,7 @@ fun InterestButton(
     ) {
         Text(text = text)
     }
-
 }
-
-
-
-
-
 /*@Preview(showBackground = true)
 @Composable
 fun SplashLocationPreView() {

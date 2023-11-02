@@ -6,7 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import kotlinx.coroutines.flow.first
 
-interface LocalDataSource {
+interface LocalDataSource  {
     suspend fun getSelectedInterests(): Set<String>
     suspend fun setSelectedInterests(interests: Set<String>)
 }
