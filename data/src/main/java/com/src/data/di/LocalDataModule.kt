@@ -26,7 +26,6 @@ object DatabaseModule {
             .fallbackToDestructiveMigration()
             .build()
     }
-
     @Provides
     fun provideLectureInfoDao(database: AppDatabase): LectureInfo {
         return database.lectureInfoDao()

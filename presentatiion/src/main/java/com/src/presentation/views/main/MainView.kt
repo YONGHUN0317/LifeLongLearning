@@ -4,7 +4,6 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -85,32 +84,27 @@ fun MainView(viewModel: MainViewModel = hiltViewModel()) {
             )
             Text(
                 text = "관심사 강의",
-                modifier = Modifier.padding(top = 10.dp),
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(top = 10.dp, ),
                 style = TextStyle(fontSize = 24.sp)
             )
             Row(
                 modifier = Modifier
+                    .horizontalScroll(rememberScrollState())
                     .padding(top = 10.dp)
-                    .fillMaxWidth() // Fill the maximum width available
-                    .horizontalScroll(rememberScrollState()), // Enable horizontal scrolling
-                horizontalArrangement = Arrangement.spacedBy(8.dp) // Space between cards
             ) {
                 selectedInterests.forEach { interest ->
-                    Box(modifier = Modifier.weight(1f)) {
-                        Card(
-                            name = interest,
-                            imageRes = getImageResource(interest),
-                            backgroundColor = colorResource(id = getColorResource(interest))
-                        )
-                    }
+                    Card(
+                        name = interest,
+                        imageRes = getImageResource(interest),
+                        backgroundColor = colorResource(id = getColorResource(interest))
+                    )
                 }
             }
 
-
-
-
             Text(
                 text = "추천 강의",
+                fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(top = 10.dp),
                 style = TextStyle(fontSize = 24.sp)
             )
@@ -118,8 +112,7 @@ fun MainView(viewModel: MainViewModel = hiltViewModel()) {
                 modifier = Modifier
                     .horizontalScroll(rememberScrollState())
                     .padding(top = 10.dp)
-
-                ) {
+            ) {
                 remainingInterests.forEach { interest ->
                     Card(
                         name = interest,
@@ -135,7 +128,7 @@ fun MainView(viewModel: MainViewModel = hiltViewModel()) {
 }
 
 
-fun getImageResource(interest: String) = when(interest) {
+fun getImageResource(interest: String) = when (interest) {
     "요리" -> R.drawable.cooking
     "영어" -> R.drawable.english
     "음악" -> R.drawable.music
@@ -156,7 +149,7 @@ fun getImageResource(interest: String) = when(interest) {
 }
 
 // Helper function to get the color resource based on the interest
-fun getColorResource(interest: String) = when(interest) {
+fun getColorResource(interest: String) = when (interest) {
     "요리" -> R.color.cooking
     "영어" -> R.color.english
     "음악" -> R.color.music
@@ -173,10 +166,11 @@ fun getColorResource(interest: String) = when(interest) {
     "원예" -> R.color.horticulture
     "패션" -> R.color.fashion
 
-    else -> R.drawable.question_mark
+    else -> R.color.white
 }
+
 @Composable
-fun Card(name: String, @DrawableRes imageRes: Int, backgroundColor : Color) {
+fun Card(name: String, @DrawableRes imageRes: Int, backgroundColor: Color) {
     Box(
         modifier = Modifier
             .padding(4.dp)
@@ -187,14 +181,54 @@ fun Card(name: String, @DrawableRes imageRes: Int, backgroundColor : Color) {
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize().padding(8.dp)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(8.dp)
         ) {
-            Image(painter = painterResource(id = imageRes), contentDescription = null, modifier = Modifier.size(100.dp, 100.dp).fillMaxSize().background(color = backgroundColor).clip(RoundedCornerShape(12.dp)))
+            Image(
+                painter = painterResource(id = imageRes),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(100.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(color = backgroundColor)
+                    //.fillMaxSize()
+            )
             Spacer(modifier = Modifier.height(4.dp))
             Text(text = name, fontSize = 14.sp, fontWeight = FontWeight.Bold)
         }
     }
 }
+
+/*@Composable
+fun Card(name: String, @DrawableRes imageRes: Int, backgroundColor: Color) {
+    Box(
+        modifier = Modifier
+            .padding(4.dp)
+            .width(120.dp) // Fixed width
+            .height(140.dp) // Fixed height
+            .clip(RoundedCornerShape(8.dp)) // Clip the Box to rounded corners
+            .background(backgroundColor) // Apply the background to the Box, not the Image
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(8.dp)
+        ) {
+            Image(
+                painter = painterResource(id = imageRes),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(100.dp) // Fixed size for the image
+                    .clip(RoundedCornerShape(12.dp)) // Clip the Image to rounded corners
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(text = name, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+        }
+    }
+}*/
+
 
 
 @Preview(showBackground = true)

@@ -59,7 +59,7 @@ fun SplashInterestView(navController: NavController, viewModel: SplashInterestVi
             modifier = Modifier.fillMaxSize()
         ) {
             Text(
-                text = "관심사 3개를 선택하세요 !",
+                text = "관심사 4개를 선택하세요 !",
                 style = MaterialTheme.typography.titleLarge.copy(
                     fontSize = 26.sp,
                     fontWeight = FontWeight.Bold
@@ -87,7 +87,7 @@ fun SplashInterestView(navController: NavController, viewModel: SplashInterestVi
                             text = interest,
                             selected = selectedInterests.contains(interest),
                             onSelected = {
-                                if (selectedInterestCount < 3) {
+                                if (selectedInterestCount < 4) {
                                     viewModel.updateSelectedInterests(interest, true)
                                 }
                             },
@@ -117,9 +117,9 @@ fun SplashInterestView(navController: NavController, viewModel: SplashInterestVi
 
         Button(
             onClick = {
-                if (selectedInterestCount < 3) {
+                if (selectedInterestCount < 4) {
                     scope.launch {
-                        StyleableToast.makeText(context, "관심사 3개를 골라주세요.", R.style.error).show()
+                        StyleableToast.makeText(context, "관심사 4개를 골라주세요.", R.style.error).show()
                     }
                 } else {
                     navController.navigate("main")

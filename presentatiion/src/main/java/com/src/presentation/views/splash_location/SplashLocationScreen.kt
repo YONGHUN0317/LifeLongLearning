@@ -4,6 +4,7 @@ import android.content.pm.PackageManager
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -11,13 +12,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -30,12 +31,12 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -47,6 +48,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.zIndex
 import androidx.core.content.ContextCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.CameraPosition
@@ -70,15 +72,19 @@ import com.src.presentation.ui.theme.LifeLongLearningTheme
 import com.src.presentation.ui.theme.OrangeButton
 import com.src.presentation.ui.theme.OrangeButtonPressed
 import com.src.presentation.ui.theme.SemiBlue
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.util.Locale
 
 
 @Composable
-fun SplashLocationView(navController: NavController? = null) {
+fun SplashLocationView(
+    navController: NavController? = null,
+    viewModel: SplashLocationViewModel = hiltViewModel()
+) {
+    var userLocation by remember { mutableStateOf<Pair<Double, Double>?>(null) }
     var query by remember { mutableStateOf("") }
     var suggestions by remember { mutableStateOf(listOf<AutocompletePrediction>()) }
-    var selectedCoordinates by remember { mutableStateOf<Pair<Double, Double>?>(null) }
-    var currentLocation by remember { mutableStateOf<Pair<Double, Double>?>(null) }
     val context = LocalContext.current
     if (!Places.isInitialized()) {
         Places.initialize(context, google_map_key, Locale.getDefault())
@@ -89,9 +95,7 @@ fun SplashLocationView(navController: NavController? = null) {
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(LatLng(0.0, 0.0), 16f)
     }
-    val userLocation = remember { mutableStateOf<LatLng?>(null) }
     var showDialog by remember { mutableStateOf(false) }
-
 
 
     fun fetchPlaceDetails(placeId: String) {
@@ -100,14 +104,15 @@ fun SplashLocationView(navController: NavController? = null) {
         placesClient.fetchPlace(request)
             .addOnSuccessListener { response ->
                 val place = response.place
-                selectedCoordinates = Pair(place.latLng!!.latitude, place.latLng!!.longitude)
+                userLocation = Pair(place.latLng!!.latitude, place.latLng!!.longitude)
                 cameraPositionState.position =
                     place.latLng?.let { CameraPosition.fromLatLngZoom(it, 16f) }!!
             }
             .addOnFailureListener { exception ->
-                Log.e("PlaceDetails", "Error fetching place details: ${exception.message}")
+                Log.e("SplashLocationView", "Error fetching place details: ${exception.message}")
             }
     }
+
 
     LaunchedEffect(Unit) {
         if (ContextCompat.checkSelfPermission(
@@ -120,8 +125,7 @@ fun SplashLocationView(navController: NavController? = null) {
         fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
             val newLatLng = LatLng(location.latitude, location.longitude)
             cameraPositionState.position = CameraPosition.fromLatLngZoom(newLatLng, 16f)
-            userLocation.value = newLatLng
-            currentLocation = Pair(location.latitude, location.longitude)  // Adding this line
+            userLocation = Pair(location.latitude, location.longitude)
         }
     }
 
@@ -142,7 +146,7 @@ fun SplashLocationView(navController: NavController? = null) {
                     suggestions = response.autocompletePredictions
                 }
                 .addOnFailureListener { exception ->
-                    Log.e("AutoComplete", "Error fetching place details: ${exception.message}")
+                    Log.e("SplashLocationView", "Error fetching place details: ${exception.message}")
                 }
         }
     }
@@ -173,7 +177,7 @@ fun SplashLocationView(navController: NavController? = null) {
                     .zIndex(1f),
                 cameraPositionState = cameraPositionState,
             ) {
-                selectedCoordinates?.let { coordinates ->
+                userLocation?.let { coordinates ->
                     Marker(
                         state = MarkerState(
                             position = LatLng(
@@ -181,28 +185,10 @@ fun SplashLocationView(navController: NavController? = null) {
                                 coordinates.second
                             )
                         ),
-                        title = "검색한 위치"
-
-
+                        title = "위치"
                     )
-                }
-                currentLocation?. let { currentLocation ->
-                    Marker(
-                        state = MarkerState(
-                            position = LatLng(
-                                currentLocation.first,
-                                currentLocation.second
-                            )
-                        ),
-                        title = "현재 위치",
-
-
-
-                    )
-                    
                 }
             }
-
         }
         Box(
             modifier = Modifier.fillMaxSize()
@@ -213,10 +199,6 @@ fun SplashLocationView(navController: NavController? = null) {
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .offset(y = 100.dp)
-                    .shadow(
-                        elevation = 4.dp, // 그림자의 높이
-                        shape = RoundedCornerShape(4.dp) // 모서리가 둥근 모양의 그림자
-                    )
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }
@@ -232,7 +214,10 @@ fun SplashLocationView(navController: NavController? = null) {
         val bgColor = if (isPressed) OrangeButtonPressed else OrangeButton
         Button(
             onClick = {
-                navController?.navigate("splashInterest")
+                userLocation?.let { coordinates ->
+                    viewModel.updateLocation(coordinates)
+                    navController?.navigate("splashInterest")
+                }
             },
             modifier = Modifier
                 .align(Alignment.BottomCenter)
@@ -256,8 +241,8 @@ fun SplashLocationView(navController: NavController? = null) {
                 fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
                     val newLatLng = LatLng(location.latitude, location.longitude)
                     cameraPositionState.position = CameraPosition.fromLatLngZoom(newLatLng, 16f)
-                    userLocation.value = newLatLng
-                    currentLocation = Pair(location.latitude, location.longitude)  // Adding this line
+                    userLocation =
+                        Pair(location.latitude, location.longitude)
                 }
             },
             contentColor = SemiBlue,
@@ -273,41 +258,48 @@ fun SplashLocationView(navController: NavController? = null) {
 
     if (showDialog) {
         Dialog(onDismissRequest = { showDialog = false }) {
-            Column {
-                TextField(
-                    modifier = Modifier.zIndex(2f),
-                    value = query,
-                    onValueChange = { newValue ->
-                        query = newValue
-                    },
-                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Search),
-                    keyboardActions = KeyboardActions(
-                        onSearch = {
-                            if (suggestions.isNotEmpty()) {
-                                val firstSuggestionId = suggestions[0].placeId
-                                fetchPlaceDetails(firstSuggestionId)
-                            }
-                        }
-                    )
-                )
-                LazyColumn(
-                    modifier = Modifier.zIndex(2f)
-                ) {
-                    items(suggestions) { suggestion ->
-                        Text(
-                            text = suggestion.getFullText(null).toString(),
-                            modifier = Modifier.clickable {
-                                fetchPlaceDetails(suggestion.placeId)
-                                showDialog = false
+            Box(modifier = Modifier.height(200.dp)) {
+                Column {
+                    TextField(
+                        modifier = Modifier
+                            .zIndex(2f)
+                            .fillMaxWidth(),
+                        value = query,
+                        onValueChange = { newValue ->
+                            query = newValue
+                        },
+                        keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Search),
+                        keyboardActions = KeyboardActions(
+                            onSearch = {
+                                if (suggestions.isNotEmpty()) {
+                                    val firstSuggestionId = suggestions[0].placeId
+                                    fetchPlaceDetails(firstSuggestionId)
+                                }
                             }
                         )
+                    )
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.White)
+                            .zIndex(2f)
+                    ) {
+                        items(suggestions) { suggestion ->
+                            Text(
+                                text = suggestion.getFullText(null).toString(),
+                                style = MaterialTheme.typography.bodyLarge.copy(fontSize = 15.sp),
+                                modifier = Modifier.clickable {
+                                    fetchPlaceDetails(suggestion.placeId)
+                                    showDialog = false
+                                }
+                            )
+                        }
                     }
                 }
             }
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable

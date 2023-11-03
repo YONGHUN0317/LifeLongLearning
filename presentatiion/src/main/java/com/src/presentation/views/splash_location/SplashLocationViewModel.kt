@@ -1,31 +1,32 @@
-/*
 package com.src.presentation.views.splash_location
 
+
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.src.domain.repository.PlacesRepository
+import androidx.lifecycle.viewModelScope
+import com.google.android.gms.maps.model.LatLng
+import com.src.data.repository.GeocodingRepository
+import com.src.data.repository.LocationRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SplashLocationViewModel @Inject constructor(private val placesRepository: PlacesRepository) : ViewModel() {
+class SplashLocationViewModel @Inject constructor(private val locationRepository: LocationRepository, private val geocodingRepository: GeocodingRepository) :
+    ViewModel() {
+    private val _userLocation = MutableLiveData<String>()
+    val userLocation: LiveData<String> = _userLocation
 
-    private val _searchResults = MutableLiveData<List<String>>()
-    val searchResults: LiveData<List<String>> get() = _searchResults
 
-    fun searchPlaces(query: String) {
-        placesRepository.searchPlaces(query, "ko", "KR") // language and region bias
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ results ->
-                _searchResults.value = results
-            }, { error ->
-                // Handle error
-            })
-        // Dispose or add to a CompositeDisposable, cleared when ViewModel is cleared
+    fun updateLocation(coordinates: Pair<Double, Double>) {
+        viewModelScope.launch {
+            val address = geocodingRepository.getAddressFromLocation(LatLng(coordinates.first, coordinates.second))
+            Log.d("SplashLocationViewModel", "repository: $address")
+            locationRepository.setLocation(address)
+            _userLocation.value = address
+        }
     }
+            //repository.setLocation(address)
 }
-*/

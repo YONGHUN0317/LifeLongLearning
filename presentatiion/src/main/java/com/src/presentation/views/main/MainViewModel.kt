@@ -26,7 +26,7 @@ class MainViewModel @Inject constructor(private val repository: InterestReposito
             val allInterests = listOf("프로그래밍", "여행", "음악", "영화", "스포츠",
                 "요리", "책", "영어", "역사", "투자", "심리", "운동",
                 "사진", "원예", "패션")
-            _remainingInterests.value = allInterests - interests
+            _remainingInterests.value = allInterests - interests.toSet()
         }
     }
 }
