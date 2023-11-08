@@ -3,19 +3,25 @@ package com.src.presentation.views.main
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,11 +47,12 @@ import com.src.presentation.ui.theme.LifeLongLearningTheme
 fun MainView(viewModel: MainViewModel = hiltViewModel()) {
     val selectedInterests by viewModel.selectedInterests.observeAsState(emptyList())
     val remainingInterests by viewModel.remainingInterests.observeAsState(emptyList())
-
+    val titles = listOf("학점은행제 · 독학학위제", "평생교육바우처", "국가문해센터", "K-MOOC", "평생교육사 자격관리", "평생학습계좌제", "늘배움", "학부모On누리", "검정고시지원센터")
+    val numbers = listOf("1600-0400", "1600-3005", "1600-6759", "1811-3118", "1577-3867", "02-3780-9986", "02-3780-9958", "02-3780-9936","1800-4602")
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(start = 10.dp, end = 10.dp)
+            //.padding(start = 10.dp, end = 10.dp)
     ) {
         Column {
             Text(
@@ -120,10 +127,50 @@ fun MainView(viewModel: MainViewModel = hiltViewModel()) {
                         backgroundColor = colorResource(id = getColorResource(interest))
                     )
                 }
-
+            }
+            LazyRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(colorResource(id = R.color.main_bottom_color)) // Use the actual color from your theme
+                    .height(40.dp)
+                    .padding(top = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                itemsIndexed(titles) { index, title ->
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier
+                                .clickable { /* TODO: Initiate phone call with numbers[index] */ }
+                                .padding(horizontal = 8.dp, vertical = 5.dp)
+                        ) {
+                            Text(
+                                text = title,
+                                color = Color.White,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.align(Alignment.CenterHorizontally)
+                            )
+                            Spacer(modifier = Modifier.height(2.dp))
+                            Text(
+                                text = numbers[index],
+                                color = Color.White,
+                                fontSize = 12.sp,
+                                modifier = Modifier.align(Alignment.CenterHorizontally)
+                            )
+                        }
+                        if (index < titles.lastIndex) {
+                            Divider(
+                                color = Color.White,
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .width(1.dp)
+                            )
+                        }
+                    }
+                }
             }
         }
-
     }
 }
 
@@ -147,8 +194,6 @@ fun getImageResource(interest: String) = when (interest) {
 
     else -> R.drawable.question_mark
 }
-
-// Helper function to get the color resource based on the interest
 fun getColorResource(interest: String) = when (interest) {
     "요리" -> R.color.cooking
     "영어" -> R.color.english
@@ -199,37 +244,6 @@ fun Card(name: String, @DrawableRes imageRes: Int, backgroundColor: Color) {
         }
     }
 }
-
-/*@Composable
-fun Card(name: String, @DrawableRes imageRes: Int, backgroundColor: Color) {
-    Box(
-        modifier = Modifier
-            .padding(4.dp)
-            .width(120.dp) // Fixed width
-            .height(140.dp) // Fixed height
-            .clip(RoundedCornerShape(8.dp)) // Clip the Box to rounded corners
-            .background(backgroundColor) // Apply the background to the Box, not the Image
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp)
-        ) {
-            Image(
-                painter = painterResource(id = imageRes),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(100.dp) // Fixed size for the image
-                    .clip(RoundedCornerShape(12.dp)) // Clip the Image to rounded corners
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(text = name, fontSize = 14.sp, fontWeight = FontWeight.Bold)
-        }
-    }
-}*/
-
-
 
 @Preview(showBackground = true)
 @Composable

@@ -27,4 +27,8 @@
     <color name="horticulture">#E3F2FD</color>
     <color name="history">#E3F2FD</color>
     <color name="programming">#80DEEA</color>
+
+    <!--   main background color-->
+    <color name="main_bottom_color">#FB6544</color>
+
 </resources>
