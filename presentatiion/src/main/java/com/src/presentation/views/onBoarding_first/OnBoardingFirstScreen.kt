@@ -1,4 +1,4 @@
-package com.src.presentation.views.splash_first
+package com.src.presentation.views.onBoarding_first
 
 import android.app.Activity
 import android.os.Looper
@@ -35,7 +35,7 @@ import com.src.presentation.ui.theme.OrangeButtonPressed
 import io.github.muddz.styleabletoast.StyleableToast
 
 @Composable
-fun SplashFirstView(navController: NavController) {
+fun OnBoardingFirstView(navController: NavController) {
     val context = LocalContext.current
     val handler = remember { android.os.Handler(Looper.getMainLooper()) }
     var (doubleBackToExitPressedOnce, _) = remember { mutableStateOf(false) }
@@ -95,7 +95,9 @@ fun SplashFirstView(navController: NavController) {
         val isPressed by interactionSource.collectIsPressedAsState()
         val bgColor = if (isPressed) OrangeButtonPressed else OrangeButton
         Button(
-            onClick = { navController.navigate("splashLocation") },
+            onClick = {
+                navController.navigate("splashLocation")
+            },
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 50.dp)

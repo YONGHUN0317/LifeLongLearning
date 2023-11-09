@@ -1,17 +1,18 @@
-package com.src.presentation.views.splash_interest
+package com.src.presentation.views.onBoarding_interest
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.src.data.datasource.local.PreferencesManager
 import com.src.data.repository.InterestRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SplashInterestViewModel @Inject constructor(private val repository: InterestRepository) : ViewModel() {
+class OnBoardingInterestViewModel @Inject constructor(private val repository: InterestRepository, private val preferencesManager: PreferencesManager) : ViewModel() {
 
     private val _selectedInterests = MutableLiveData<Set<String>>()
     val selectedInterests: LiveData<Set<String>> = _selectedInterests
@@ -28,6 +29,12 @@ class SplashInterestViewModel @Inject constructor(private val repository: Intere
             Log.d("SplashInterestViewModel", "repository: $updatedInterests")
             repository.setSelectedInterests(updatedInterests)
             _selectedInterests.value = updatedInterests
+        }
+    }
+
+    fun updateFirstLaunchToFalse() {
+        viewModelScope.launch {
+            preferencesManager.updateFirstLaunch(false)
         }
     }
 }

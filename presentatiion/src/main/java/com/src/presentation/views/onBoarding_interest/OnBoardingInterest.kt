@@ -1,4 +1,4 @@
-package com.src.presentation.views.splash_interest
+package com.src.presentation.views.onBoarding_interest
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -33,16 +33,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.src.data.datasource.local.PreferencesManager
 import com.src.presentatiion.R
 import com.src.presentation.ui.theme.OrangeButton
 import com.src.presentation.ui.theme.OrangeButtonPressed
 import com.src.presentation.ui.theme.Selected
 import com.src.presentation.ui.theme.UnSelected
 import io.github.muddz.styleabletoast.StyleableToast
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @Composable
-fun SplashInterestView(navController: NavController, viewModel: SplashInterestViewModel = hiltViewModel()) {
+fun OnBoardingInterestView(navController: NavController, viewModel: OnBoardingInterestViewModel = hiltViewModel()) {
     //SplashInterestViewModel
     val selectedInterests by viewModel.selectedInterests.observeAsState(setOf())
     val selectedInterestCount = selectedInterests.size
@@ -122,7 +126,12 @@ fun SplashInterestView(navController: NavController, viewModel: SplashInterestVi
                         StyleableToast.makeText(context, "관심사 4개를 골라주세요.", R.style.error).show()
                     }
                 } else {
-                    navController.navigate("main")
+                    viewModel.updateFirstLaunchToFalse()
+
+                    // 'main' 화면으로 네비게이션
+                    navController.navigate("main") {
+                        popUpTo("allow") { inclusive = true }
+                    }
                 }
             },
             modifier = Modifier

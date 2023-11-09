@@ -1,5 +1,7 @@
 package com.src.presentation.views.main
 
+import android.content.Intent
+import android.net.Uri
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -10,13 +12,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
@@ -31,13 +33,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.src.presentatiion.R
 import com.src.presentation.ui.theme.LifeLongLearningTheme
@@ -47,12 +53,36 @@ import com.src.presentation.ui.theme.LifeLongLearningTheme
 fun MainView(viewModel: MainViewModel = hiltViewModel()) {
     val selectedInterests by viewModel.selectedInterests.observeAsState(emptyList())
     val remainingInterests by viewModel.remainingInterests.observeAsState(emptyList())
-    val titles = listOf("학점은행제 · 독학학위제", "평생교육바우처", "국가문해센터", "K-MOOC", "평생교육사 자격관리", "평생학습계좌제", "늘배움", "학부모On누리", "검정고시지원센터")
-    val numbers = listOf("1600-0400", "1600-3005", "1600-6759", "1811-3118", "1577-3867", "02-3780-9986", "02-3780-9958", "02-3780-9936","1800-4602")
+    val context = LocalContext.current
+    val pretendardBold = FontFamily(Font(R.font.pretendard_bold))
+    val pretendardLight = FontFamily(Font(R.font.pretendard_light))
+
+    val titles = listOf(
+        "학점은행제 · 독학학위제",
+        "평생교육바우처",
+        "국가문해센터",
+        "K-MOOC",
+        "평생교육사 자격관리",
+        "평생학습계좌제",
+        "늘배움",
+        "학부모On누리",
+        "검정고시지원센터"
+    )
+    val numbers = listOf(
+        "1600-0400",
+        "1600-3005",
+        "1600-6759",
+        "1811-3118",
+        "1577-3867",
+        "02-3780-9986",
+        "02-3780-9958",
+        "02-3780-9936",
+        "1800-4602"
+    )
     Box(
         modifier = Modifier
             .fillMaxSize()
-            //.padding(start = 10.dp, end = 10.dp)
+            .padding(top = 15.dp)
     ) {
         Column {
             Text(
@@ -92,13 +122,13 @@ fun MainView(viewModel: MainViewModel = hiltViewModel()) {
             Text(
                 text = "관심사 강의",
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(top = 10.dp, ),
+                modifier = Modifier.padding(top = 10.dp, start = 10.dp),
                 style = TextStyle(fontSize = 24.sp)
             )
             Row(
                 modifier = Modifier
                     .horizontalScroll(rememberScrollState())
-                    .padding(top = 10.dp)
+                    .padding(top = 10.dp, start = 10.dp)
             ) {
                 selectedInterests.forEach { interest ->
                     Card(
@@ -112,13 +142,13 @@ fun MainView(viewModel: MainViewModel = hiltViewModel()) {
             Text(
                 text = "추천 강의",
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(top = 10.dp),
+                modifier = Modifier.padding(top = 10.dp, start = 10.dp),
                 style = TextStyle(fontSize = 24.sp)
             )
             Row(
                 modifier = Modifier
                     .horizontalScroll(rememberScrollState())
-                    .padding(top = 10.dp)
+                    .padding(top = 10.dp, start = 10.dp)
             ) {
                 remainingInterests.forEach { interest ->
                     Card(
@@ -128,44 +158,64 @@ fun MainView(viewModel: MainViewModel = hiltViewModel()) {
                     )
                 }
             }
+            Spacer(modifier = Modifier.weight(1f))
             LazyRow(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(colorResource(id = R.color.main_bottom_color)) // Use the actual color from your theme
-                    .height(40.dp)
-                    .padding(top = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    .background(colorResource(id = R.color.main_bottom_color))
+                    .padding(vertical = 4.dp),
+                horizontalArrangement = Arrangement.Center
             ) {
                 itemsIndexed(titles) { index, title ->
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
+                    Box(
+                        modifier = Modifier
+                            .padding(horizontal = 4.dp)
+                            .height(40.dp)
+                            .wrapContentHeight()
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center,
                             modifier = Modifier
-                                .clickable { /* TODO: Initiate phone call with numbers[index] */ }
-                                .padding(horizontal = 8.dp, vertical = 5.dp)
+                                .fillMaxWidth()
                         ) {
-                            Text(
-                                text = title,
-                                color = Color.White,
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier.align(Alignment.CenterHorizontally)
-                            )
-                            Spacer(modifier = Modifier.height(2.dp))
-                            Text(
-                                text = numbers[index],
-                                color = Color.White,
-                                fontSize = 12.sp,
-                                modifier = Modifier.align(Alignment.CenterHorizontally)
-                            )
-                        }
-                        if (index < titles.lastIndex) {
-                            Divider(
-                                color = Color.White,
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
                                 modifier = Modifier
-                                    .fillMaxHeight()
-                                    .width(1.dp)
-                            )
+                                    .clickable {
+                                        val phoneNumber = numbers[index]
+                                        val intent = Intent(Intent.ACTION_DIAL).apply {
+                                            data = Uri.parse("tel:$phoneNumber")
+                                        }
+                                        startActivity(context, intent, null)
+                                    }
+                                    .padding(horizontal = 4.dp)
+                            ) {
+                                Text(
+                                    text = title,
+                                    fontFamily = pretendardBold,
+                                    fontSize = 16.sp,
+                                    color = Color.White,
+                                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                                )
+                                Spacer(modifier = Modifier.height(2.dp))
+                                Text(
+                                    text = numbers[index],
+                                    fontFamily = pretendardLight,
+                                    color = Color.White,
+                                    fontSize = 12.sp,
+                                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                                )
+                            }
+                            if (index < titles.lastIndex) {
+                                Divider(
+                                    color = Color.White,
+                                    modifier = Modifier
+                                        .height(24.dp)
+                                        .width(1.dp)
+                                        .padding(vertical = 4.dp)
+                                )
+                            }
                         }
                     }
                 }
@@ -194,6 +244,7 @@ fun getImageResource(interest: String) = when (interest) {
 
     else -> R.drawable.question_mark
 }
+
 fun getColorResource(interest: String) = when (interest) {
     "요리" -> R.color.cooking
     "영어" -> R.color.english
@@ -237,7 +288,7 @@ fun Card(name: String, @DrawableRes imageRes: Int, backgroundColor: Color) {
                     .size(100.dp)
                     .clip(RoundedCornerShape(12.dp))
                     .background(color = backgroundColor)
-                    //.fillMaxSize()
+                //.fillMaxSize()
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(text = name, fontSize = 14.sp, fontWeight = FontWeight.Bold)

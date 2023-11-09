@@ -1,4 +1,4 @@
-package com.src.presentation.views.splash_location
+package com.src.presentation.views.onBoarding_location
 
 
 import android.util.Log
@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SplashLocationViewModel @Inject constructor(private val locationRepository: LocationRepository, private val geocodingRepository: GeocodingRepository) :
+class OnBoardingLocationViewModel @Inject constructor(private val locationRepository: LocationRepository, private val geocodingRepository: GeocodingRepository) :
     ViewModel() {
     private val _userLocation = MutableLiveData<String>()
     val userLocation: LiveData<String> = _userLocation

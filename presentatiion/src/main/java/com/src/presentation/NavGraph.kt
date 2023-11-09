@@ -6,11 +6,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.src.presentation.views.allow.AllowScreen
 import com.src.presentation.views.main.MainView
-import com.src.presentation.views.splash_first.SplashFirstView
-import com.src.presentation.views.splash_interest.SplashInterestView
-import com.src.presentation.views.splash_location.SplashLocationView
+import com.src.presentation.views.onBoarding_first.OnBoardingFirstView
+import com.src.presentation.views.onBoarding_interest.OnBoardingInterestView
+import com.src.presentation.views.onBoarding_location.OnBoardingLocationView
 
-@Composable
+/*@Composable
 fun MainContent() {
     val navController = rememberNavController()
 
@@ -19,13 +19,36 @@ fun MainContent() {
             AllowScreen(navController)
         }
         composable("splashFirst") {
-            SplashFirstView(navController)
+            OnBoardingFirstView(navController)
         }
         composable("splashLocation") {
             SplashLocationView(navController)
         }
         composable("splashInterest") {
-            SplashInterestView(navController)
+            OnBoardingInterestView(navController)
+        }
+        composable("main") {
+            MainView()
+        }
+    }
+}*/
+
+@Composable
+fun OnboardingScreen() {
+    val navController = rememberNavController()
+
+    NavHost(navController = navController, startDestination = "allow") {
+        composable("allow") {
+            AllowScreen(navController)
+        }
+        composable("splashFirst") {
+            OnBoardingFirstView(navController)
+        }
+        composable("splashLocation") {
+            OnBoardingLocationView(navController)
+        }
+        composable("splashInterest") {
+            OnBoardingInterestView(navController)
         }
         composable("main") {
             MainView()

@@ -1,4 +1,4 @@
-package com.src.presentation.views.splash_location
+package com.src.presentation.views.onBoarding_location
 
 import android.content.pm.PackageManager
 import android.Manifest.permission.ACCESS_FINE_LOCATION
@@ -31,7 +31,6 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -42,7 +41,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -68,19 +66,16 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.src.presentatiion.BuildConfig.google_map_key
 import com.src.presentatiion.R
-import com.src.presentation.ui.theme.LifeLongLearningTheme
 import com.src.presentation.ui.theme.OrangeButton
 import com.src.presentation.ui.theme.OrangeButtonPressed
 import com.src.presentation.ui.theme.SemiBlue
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.util.Locale
 
 
 @Composable
-fun SplashLocationView(
+fun OnBoardingLocationView(
     navController: NavController? = null,
-    viewModel: SplashLocationViewModel = hiltViewModel()
+    viewModel: OnBoardingLocationViewModel = hiltViewModel(),
 ) {
     var userLocation by remember { mutableStateOf<Pair<Double, Double>?>(null) }
     var query by remember { mutableStateOf("") }
@@ -301,10 +296,10 @@ fun SplashLocationView(
     }
 }
 
-@Preview(showBackground = true)
+/*@Preview(showBackground = true)
 @Composable
 fun SplashLocationPreView() {
-    LifeLongLearningTheme() {
+    LifeLongLearningTheme {
         SplashLocationView()
     }
-}
+}*/

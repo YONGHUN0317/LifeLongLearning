@@ -3,16 +3,39 @@ package com.src.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.lifecycle.lifecycleScope
+import com.src.data.datasource.local.PreferencesManager
+import com.src.data.datasource.local.dataStore
+import com.src.presentation.views.main.MainView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var preferencesManager: PreferencesManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MainContent()
+            val isFirstTime = remember { mutableStateOf(true) }
+            LaunchedEffect(key1 = "isFirstLaunch") {
+                preferencesManager.isFirstLaunch.collect { isFirst ->
+                    isFirstTime.value = isFirst
+                }
+            }
+            if (isFirstTime.value) {
+                OnboardingScreen() // 온보딩 화면으로 이동
+            } else {
+                MainView() // 메인 화면으로 이동
+            }
         }
     }
 }
+
 
