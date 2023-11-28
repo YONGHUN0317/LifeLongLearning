@@ -1,7 +1,6 @@
 package com.src.data.di
 
 import android.content.Context
-import com.src.data.api.ApiInterface
 import com.src.data.datasource.local.PreferencesManager
 import com.src.data.datasource.local.dataStore
 import dagger.Module
@@ -14,11 +13,12 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 @Module
 class ApiModule {
-    @Singleton
+    /*@Singleton
     @Provides
     fun provideApiService(): ApiInterface {
         return ApiInterface.create()
-    }
+    }*/
+
 
     @Singleton
     @Provides

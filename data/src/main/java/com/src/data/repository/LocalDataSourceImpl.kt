@@ -1,21 +1,14 @@
-package com.src.data.datasource.local
+package com.src.data.repository
 
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
+import com.src.data.datasource.local.LocalDataSource
 import kotlinx.coroutines.flow.first
 
-interface LocalDataSource  {
-    suspend fun getSelectedInterests(): Set<String>
-    suspend fun setSelectedInterests(interests: Set<String>)
-
-    suspend fun getLocation(): String
-    suspend fun setLocation(location: String)
-}
-
-/*class LocalDataSourceImpl(private val dataStore: DataStore<Preferences>) : LocalDataSource {
+class LocalDataSourceImpl(private val dataStore: DataStore<Preferences>) : LocalDataSource {
     private val selectedInterestsKey = stringSetPreferencesKey("selected_interests")
     private val userLocationKey = stringPreferencesKey("user_location")
 
@@ -40,4 +33,4 @@ interface LocalDataSource  {
             preferences[userLocationKey] = location
         }
     }
-}*/
+}

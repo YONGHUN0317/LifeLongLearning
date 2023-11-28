@@ -1,11 +1,13 @@
+/*
 package com.src.data.mapper
 
-import com.src.data.model.LectureInfo
+import com.src.domain.model.Lecture
+import com.src.data.model.LifeLongItem
 
 
-fun mapLectureInfoToViewData(lectureInfo: List<LectureInfo>): List<com.src.domain.model.LifeLongItem> {
-    return lectureInfo.map {
-        com.src.domain.model.LifeLongItem(
+fun mapLectureInfoToViewData(lecture: List<Lecture>): List<LifeLongItem> {
+    return lecture.map {
+        LifeLongItem(
             it.lctreNm,
             it.instrctrNm,
             it.edcStartDay,
@@ -36,3 +38,4 @@ fun mapLectureInfoToViewData(lectureInfo: List<LectureInfo>): List<com.src.domai
     }
 }
 
+*/

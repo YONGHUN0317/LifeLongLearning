@@ -9,32 +9,10 @@ import com.src.presentation.views.main.MainView
 import com.src.presentation.views.onBoarding_first.OnBoardingFirstView
 import com.src.presentation.views.onBoarding_interest.OnBoardingInterestView
 import com.src.presentation.views.onBoarding_location.OnBoardingLocationView
-
-/*@Composable
-fun MainContent() {
-    val navController = rememberNavController()
-
-    NavHost(navController = navController, startDestination = "allow") {
-        composable("allow") {
-            AllowScreen(navController)
-        }
-        composable("splashFirst") {
-            OnBoardingFirstView(navController)
-        }
-        composable("splashLocation") {
-            SplashLocationView(navController)
-        }
-        composable("splashInterest") {
-            OnBoardingInterestView(navController)
-        }
-        composable("main") {
-            MainView()
-        }
-    }
-}*/
+import com.src.presentation.views.search.SearchView
 
 @Composable
-fun OnboardingScreen() {
+fun OnboardScreen() {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = "allow") {
@@ -51,7 +29,25 @@ fun OnboardingScreen() {
             OnBoardingInterestView(navController)
         }
         composable("main") {
-            MainView()
+            MainView(navController = navController)
+
+        }
+    }
+}
+
+
+@Composable
+fun Main() {
+    val navController = rememberNavController()
+
+    NavHost(navController = navController, startDestination = "main") {
+        composable("main") {
+            MainView(navController = navController)
+
+        }
+
+        composable("search") {
+            SearchView(navController = navController)
         }
     }
 }

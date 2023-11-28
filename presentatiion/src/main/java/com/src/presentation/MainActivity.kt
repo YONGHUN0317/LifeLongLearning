@@ -6,12 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.lifecycle.lifecycleScope
 import com.src.data.datasource.local.PreferencesManager
-import com.src.data.datasource.local.dataStore
-import com.src.presentation.views.main.MainView
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -30,9 +26,9 @@ class MainActivity : ComponentActivity() {
                 }
             }
             if (isFirstTime.value) {
-                OnboardingScreen() // 온보딩 화면으로 이동
+                OnboardScreen() // 온보딩 화면으로 이동
             } else {
-                MainView() // 메인 화면으로 이동
+                Main() // 메인 화면으로 이동
             }
         }
     }

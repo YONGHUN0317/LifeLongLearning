@@ -6,7 +6,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.src.data.datasource.local.LocalDataSource
-import com.src.data.datasource.local.LocalDataSourceImpl
+import com.src.data.repository.LocalDataSourceImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

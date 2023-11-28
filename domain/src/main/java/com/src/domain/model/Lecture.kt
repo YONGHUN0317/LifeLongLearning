@@ -1,14 +1,10 @@
-package com.src.data.model
+package com.src.domain.model
 
 import android.os.Parcelable
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-@Entity(tableName = "lectureInfo")
-data class LectureInfo(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+data class Lecture(
     val lctreNm: String,
     val instrctrNm: String,
     val edcStartDay: String,

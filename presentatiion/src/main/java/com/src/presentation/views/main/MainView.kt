@@ -7,6 +7,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,8 +30,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -45,17 +48,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import coil.compose.rememberImagePainter
+import coil.request.CachePolicy
 import com.src.presentatiion.R
 import com.src.presentation.ui.theme.LifeLongLearningTheme
 
+val pretendardBold = FontFamily(Font(R.font.pretendard_bold))
+val pretendardLight = FontFamily(Font(R.font.pretendard_light))
 
 @Composable
-fun MainView(viewModel: MainViewModel = hiltViewModel()) {
+fun MainView(viewModel: MainViewModel = hiltViewModel(),
+             navController: NavController) {
     val selectedInterests by viewModel.selectedInterests.observeAsState(emptyList())
     val remainingInterests by viewModel.remainingInterests.observeAsState(emptyList())
     val context = LocalContext.current
-    val pretendardBold = FontFamily(Font(R.font.pretendard_bold))
-    val pretendardLight = FontFamily(Font(R.font.pretendard_light))
 
     val titles = listOf(
         "학점은행제 · 독학학위제",
@@ -118,6 +125,12 @@ fun MainView(viewModel: MainViewModel = hiltViewModel()) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 10.dp, end = 10.dp, top = 20.dp)
+                    .clickable(
+                        indication = null, // 시각적 효과 제거
+                        interactionSource = remember { MutableInteractionSource() } // 기본 상호작용 추적 안함
+                    ) {
+                        navController.navigate("search")
+                    }
             )
             Text(
                 text = "관심사 강의",
@@ -182,7 +195,7 @@ fun MainView(viewModel: MainViewModel = hiltViewModel()) {
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 modifier = Modifier
-                                    .clickable {
+                                    .noRippleClickable {
                                         val phoneNumber = numbers[index]
                                         val intent = Intent(Intent.ACTION_DIAL).apply {
                                             data = Uri.parse("tel:$phoneNumber")
@@ -224,6 +237,12 @@ fun MainView(viewModel: MainViewModel = hiltViewModel()) {
     }
 }
 
+inline fun Modifier.noRippleClickable(crossinline onClick: () -> Unit): Modifier = composed {
+    clickable(indication = null,
+        interactionSource = remember { MutableInteractionSource() }) {
+        onClick()
+    }
+}
 
 fun getImageResource(interest: String) = when (interest) {
     "요리" -> R.drawable.cooking
@@ -267,6 +286,14 @@ fun getColorResource(interest: String) = when (interest) {
 
 @Composable
 fun Card(name: String, @DrawableRes imageRes: Int, backgroundColor: Color) {
+    val imagePainter = rememberImagePainter(
+        data = imageRes,
+        builder = {
+            memoryCachePolicy(CachePolicy.ENABLED)
+            diskCachePolicy(CachePolicy.ENABLED)
+            crossfade(true) // 이미지 로딩 시 크로스페이드 효과 사용
+        }
+    )
     Box(
         modifier = Modifier
             .padding(4.dp)
@@ -282,13 +309,12 @@ fun Card(name: String, @DrawableRes imageRes: Int, backgroundColor: Color) {
                 .padding(8.dp)
         ) {
             Image(
-                painter = painterResource(id = imageRes),
+                painter = imagePainter,
                 contentDescription = null,
                 modifier = Modifier
                     .size(100.dp)
                     .clip(RoundedCornerShape(12.dp))
                     .background(color = backgroundColor)
-                //.fillMaxSize()
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(text = name, fontSize = 14.sp, fontWeight = FontWeight.Bold)
@@ -296,10 +322,11 @@ fun Card(name: String, @DrawableRes imageRes: Int, backgroundColor: Color) {
     }
 }
 
+/*
 @Preview(showBackground = true)
 @Composable
 fun SplashLocationPreView() {
     LifeLongLearningTheme {
         MainView()
     }
-}
+}*/

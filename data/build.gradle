@@ -8,6 +8,7 @@ plugins {
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 def google_map_key = properties.getProperty('google_map_key')
+def public_apikey = properties.getProperty('public_apikey')
 android {
     namespace 'com.example.data2'
     compileSdk 34
@@ -19,6 +20,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
         manifestPlaceholders= [googleMapKey: google_map_key]
+        manifestPlaceholders= [publicKey: public_apikey]
     }
 
     buildTypes {
@@ -39,17 +41,30 @@ android {
 
 dependencies {
     implementation project(':domain')
+    implementation "androidx.lifecycle:lifecycle-reactivestreams-ktx:2.6.2"
+
+
     implementation 'com.google.android.gms:play-services-maps:18.2.0'
-    implementation "androidx.room:room-runtime:2.5.2"
-    implementation 'io.reactivex.rxjava3:rxjava:3.1.0'
+    implementation "androidx.room:room-runtime:2.6.0"
+    //rxjava
+    implementation 'io.reactivex.rxjava3:rxjava:3.1.5'
     implementation 'com.squareup.retrofit2:adapter-rxjava3:2.9.0'
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.2'
+    implementation 'io.reactivex.rxjava3:rxkotlin:3.0.0'
+    implementation 'com.jakewharton.rxbinding4:rxbinding:4.0.0'
+    implementation 'androidx.room:room-rxjava3:2.6.0'
+
+
+    //room
+    kapt "androidx.room:room-compiler:2.6.0"
+
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
-    implementation 'androidx.core:core-ktx:1.10.1'
+    implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'com.google.android.material:material:1.10.0'
     implementation 'androidx.datastore:datastore-core:1.0.0'
     implementation("androidx.datastore:datastore-preferences-core:1.0.0")
     testImplementation 'junit:junit:4.13.2'
@@ -59,6 +74,13 @@ dependencies {
     // hilt
     implementation "com.google.dagger:hilt-android:2.48.1"
     kapt "com.google.dagger:hilt-compiler:2.48.1"
+
+    // paging
+    implementation 'androidx.paging:paging-common-android:3.3.0-alpha02'
+
+    //
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-rx3:1.7.1"
+
 }
 
 kapt {

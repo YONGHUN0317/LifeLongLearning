@@ -1,9 +1,10 @@
+/*
 package com.src.data.di
 
 import android.content.Context
 import androidx.room.Room
-import com.src.data.model.LectureInfo
 import com.src.data.db.AppDatabase
+import com.src.data.db.LectureDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,8 +27,9 @@ object DatabaseModule {
             .fallbackToDestructiveMigration()
             .build()
     }
+
     @Provides
-    fun provideLectureInfoDao(database: AppDatabase): LectureInfo {
+    fun provideLectureDao(database: AppDatabase): LectureDao {
         return database.lectureInfoDao()
     }
-}
+}*/
