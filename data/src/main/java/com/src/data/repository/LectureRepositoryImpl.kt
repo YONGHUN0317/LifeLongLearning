@@ -5,7 +5,6 @@ import com.src.data.datasource.local.LecturePagingSource
 import com.src.data.db.LectureDao
 import com.src.domain.model.Lecture
 import com.src.domain.repository.LectureRepository
-import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
 class LectureRepositoryImpl @Inject constructor(

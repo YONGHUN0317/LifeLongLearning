@@ -4,18 +4,17 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.src.data.db.LectureDao
 import com.src.domain.model.Lecture
-import kotlinx.coroutines.rx3.await
-import retrofit2.HttpException
+import kotlinx.coroutines.flow.first
 import java.io.IOException
 
-class LecturePagingSource (
+class LecturePagingSource(
     private val lectureDao: LectureDao
 ) : PagingSource<Int, Lecture>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Lecture> {
         return try {
             val currentPage = params.key ?: 1
-            val lectureList = lectureDao.getAllLectures().await()
+            val lectureList = lectureDao.getAllLectures().first()
             LoadResult.Page(
                 data = lectureList,
                 prevKey = if (currentPage == 1) null else currentPage - 1,
@@ -23,12 +22,15 @@ class LecturePagingSource (
             )
         } catch (exception: IOException) {
             LoadResult.Error(exception)
-        } catch (exception: HttpException) {
+        } catch (exception: Exception) {
             LoadResult.Error(exception)
         }
     }
 
     override fun getRefreshKey(state: PagingState<Int, Lecture>): Int? {
-        return state.anchorPosition
+        return state.anchorPosition?.let { position ->
+            state.closestPageToPosition(position)?.prevKey?.plus(1)
+                ?: state.closestPageToPosition(position)?.nextKey?.minus(1)
+        }
     }
 }
