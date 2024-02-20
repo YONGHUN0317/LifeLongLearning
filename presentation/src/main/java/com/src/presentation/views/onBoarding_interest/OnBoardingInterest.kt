@@ -29,12 +29,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.src.data.datasource.local.PreferencesManager
 import com.src.presentatiion.R
+import com.src.presentation.ui.theme.LifeLongLearningTheme
 import com.src.presentation.ui.theme.OrangeButton
 import com.src.presentation.ui.theme.OrangeButtonPressed
 import com.src.presentation.ui.theme.Selected

@@ -6,15 +6,20 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import com.src.data.datasource.local.LocalDataSource
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 
 class LocalDataSourceImpl(private val dataStore: DataStore<Preferences>) : LocalDataSource {
     private val selectedInterestsKey = stringSetPreferencesKey("selected_interests")
     private val userLocationKey = stringPreferencesKey("user_location")
 
-    override suspend fun getSelectedInterests(): Set<String> {
-        val preferences = dataStore.data.first()
-        return preferences[selectedInterestsKey] ?: setOf()
+    override suspend fun getSelectedInterests(): Flow<Set<String>> {
+        return flow {
+            val preferences = dataStore.data.first() // 환경설정의 현재 스냅샷을 가져옵니다.
+            val selectedInterests = preferences[selectedInterestsKey] ?: setOf()
+            emit(selectedInterests)
+        }
     }
 
     override suspend fun setSelectedInterests(interests: Set<String>) {

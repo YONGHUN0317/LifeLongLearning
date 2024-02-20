@@ -1,18 +1,24 @@
 package com.src.data.di
 
-import com.src.data.db.LectureDao
-import com.src.data.repository.LectureRepositoryImpl
-import com.src.domain.repository.LectureRepository
+import com.src.data.repository.InterestRepositoryImpl
+import com.src.data.repository.PreferencesRepositoryImpl
+import com.src.domain.repository.InterestRepository
+import com.src.domain.repository.PreferencesRepository
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityRetainedComponent
+import dagger.hilt.components.SingletonComponent
 
 @Module
-@InstallIn(ActivityRetainedComponent::class)
-object RepositoryModule {
+@InstallIn(SingletonComponent::class)
+abstract class RepositoryModule {
 
-    @Provides
-    fun provideLectureRepository(lectureDao: LectureDao): LectureRepository =
-        LectureRepositoryImpl(lectureDao)
+    @Binds
+    abstract fun bindInterestRepository(impl: InterestRepositoryImpl): InterestRepository
+
+    @Binds
+    abstract fun bindPreferencesRepository(impl: PreferencesRepositoryImpl): PreferencesRepository
 }
+  /*  @Provides
+    fun provideLectureRepository(lectureDao: LectureDao): LectureRepository =
+        LectureRepositoryImpl(lectureDao)*/
