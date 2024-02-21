@@ -9,24 +9,30 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
 import com.src.data.repository.GeocodingRepository
 import com.src.data.repository.LocationRepository
+import com.src.domain.usecase.GetAddressFromLocationUseCase
+import com.src.domain.usecase.GetLocationUseCase
+import com.src.domain.usecase.SetLocationUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class OnBoardingLocationViewModel @Inject constructor(private val locationRepository: LocationRepository, private val geocodingRepository: GeocodingRepository) :
-    ViewModel() {
+class OnBoardingLocationViewModel @Inject constructor(
+    private val getLocationUseCase: GetLocationUseCase,
+    private val setLocationUseCase: SetLocationUseCase,
+    private val getAddressFromLocationUseCase: GetAddressFromLocationUseCase
+) : ViewModel() {
+
     private val _userLocation = MutableLiveData<String>()
     val userLocation: LiveData<String> = _userLocation
 
-
     fun updateLocation(coordinates: Pair<Double, Double>) {
         viewModelScope.launch {
-            val address = geocodingRepository.getAddressFromLocation(LatLng(coordinates.first, coordinates.second))
+            val address = getAddressFromLocationUseCase(coordinates.first, coordinates.second).first()
             Log.d("SplashLocationViewModel", "repository: $address")
-            locationRepository.setLocation(address)
+            setLocationUseCase(address)
             _userLocation.value = address
         }
     }
-            //repository.setLocation(address)
 }

@@ -16,7 +16,7 @@ class LocalDataSourceImpl(private val dataStore: DataStore<Preferences>) : Local
 
     override suspend fun getSelectedInterests(): Flow<Set<String>> {
         return flow {
-            val preferences = dataStore.data.first() // 환경설정의 현재 스냅샷을 가져옵니다.
+            val preferences = dataStore.data.first()
             val selectedInterests = preferences[selectedInterestsKey] ?: setOf()
             emit(selectedInterests)
         }
