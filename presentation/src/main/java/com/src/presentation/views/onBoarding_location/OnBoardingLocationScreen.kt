@@ -64,8 +64,8 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
-import com.src.presentatiion.BuildConfig.google_map_key
-import com.src.presentatiion.R
+import com.src.presentation.BuildConfig.google_map_key
+import com.src.presentation.R
 import com.src.presentation.ui.theme.OrangeButton
 import com.src.presentation.ui.theme.OrangeButtonPressed
 import com.src.presentation.ui.theme.SemiBlue

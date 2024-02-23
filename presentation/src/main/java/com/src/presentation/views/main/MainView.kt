@@ -28,8 +28,8 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,7 +43,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
@@ -51,18 +50,23 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import coil.request.CachePolicy
-import com.src.presentatiion.R
-import com.src.presentation.ui.theme.LifeLongLearningTheme
+import com.src.presentation.R
 
-val pretendardBold = FontFamily(Font(R.font.pretendard_bold))
-val pretendardLight = FontFamily(Font(R.font.pretendard_light))
+val Pretendard = FontFamily(
+    Font(R.font.pretendard_light, FontWeight.Light),
+    Font(R.font.pretendard_regular, FontWeight.Normal),
+    Font(R.font.pretendard_bold, FontWeight.Bold)
+
+)
 
 @Composable
 fun MainView(viewModel: MainViewModel = hiltViewModel(),
              navController: NavController) {
-    val selectedInterests by viewModel.selectedInterests.observeAsState(emptyList())
-    val remainingInterests by viewModel.remainingInterests.observeAsState(emptyList())
+    val selectedInterests by viewModel.selectedInterests.collectAsState()
+    val remainingInterests by viewModel.remainingInterests.collectAsState()
     val context = LocalContext.current
+
+
 
     val titles = listOf(
         "학점은행제 · 독학학위제",
@@ -206,7 +210,8 @@ fun MainView(viewModel: MainViewModel = hiltViewModel(),
                             ) {
                                 Text(
                                     text = title,
-                                    fontFamily = pretendardBold,
+                                    fontFamily = Pretendard,
+                                    fontWeight = FontWeight.Bold,
                                     fontSize = 16.sp,
                                     color = Color.White,
                                     modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -214,7 +219,8 @@ fun MainView(viewModel: MainViewModel = hiltViewModel(),
                                 Spacer(modifier = Modifier.height(2.dp))
                                 Text(
                                     text = numbers[index],
-                                    fontFamily = pretendardLight,
+                                    fontFamily = Pretendard,
+                                    fontWeight = FontWeight.Light,
                                     color = Color.White,
                                     fontSize = 12.sp,
                                     modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -238,8 +244,10 @@ fun MainView(viewModel: MainViewModel = hiltViewModel(),
 }
 
 inline fun Modifier.noRippleClickable(crossinline onClick: () -> Unit): Modifier = composed {
-    clickable(indication = null,
-        interactionSource = remember { MutableInteractionSource() }) {
+    this.clickable(
+        indication = null,
+        interactionSource = remember { MutableInteractionSource() }
+    ) {
         onClick()
     }
 }

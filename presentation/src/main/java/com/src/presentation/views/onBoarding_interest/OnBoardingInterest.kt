@@ -18,8 +18,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -29,28 +29,22 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.src.data.datasource.local.PreferencesManager
-import com.src.presentatiion.R
-import com.src.presentation.ui.theme.LifeLongLearningTheme
+import com.src.presentation.R
 import com.src.presentation.ui.theme.OrangeButton
 import com.src.presentation.ui.theme.OrangeButtonPressed
 import com.src.presentation.ui.theme.Selected
 import com.src.presentation.ui.theme.UnSelected
 import io.github.muddz.styleabletoast.StyleableToast
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @Composable
 fun OnBoardingInterestView(navController: NavController, viewModel: OnBoardingInterestViewModel = hiltViewModel()) {
     //SplashInterestViewModel
-    val selectedInterests by viewModel.selectedInterests.observeAsState(setOf())
+    val selectedInterests by viewModel.selectedInterests.collectAsState()
     val selectedInterestCount = selectedInterests.size
 
     val context = LocalContext.current

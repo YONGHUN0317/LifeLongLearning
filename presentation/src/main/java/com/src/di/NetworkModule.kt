@@ -1,6 +1,6 @@
 package com.src.di
 
-import com.src.presentatiion.BuildConfig
+import com.src.presentation.BuildConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

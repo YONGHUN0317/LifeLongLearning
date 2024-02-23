@@ -10,11 +10,11 @@ Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 def google_map_key = properties.getProperty('google_map_key')
 android {
-    namespace 'com.src.presentatiion'
+    namespace 'com.src.presentation'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.src.presentatiion"
+        applicationId "com.src.presentation"
         minSdk 26
         targetSdk 34
         versionCode 1
@@ -81,6 +81,7 @@ dependencies {
     // hilt
     implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
     implementation "com.google.dagger:hilt-android:2.48.1"
+    implementation 'androidx.compose.material3:material3-desktop:1.2.0'
     kapt "com.google.dagger:hilt-compiler:2.48.1"
 
     implementation platform('androidx.compose:compose-bom:2022.10.00')

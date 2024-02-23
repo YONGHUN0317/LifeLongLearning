@@ -1,4 +1,4 @@
-package com.src.presentatiion
+package com.src.presentation
 
 import org.junit.Test
 
