@@ -1,4 +1,4 @@
-package com.example.data2
+package com.src.data
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

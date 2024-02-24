@@ -1,4 +1,4 @@
-package com.src.data.datasource.local
+package com.src.data.datasource.remote
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState

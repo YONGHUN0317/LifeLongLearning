@@ -22,13 +22,13 @@ class OnBoardingInterestViewModel @Inject constructor(
     private val _selectedInterests = MutableStateFlow<Set<String>>(emptySet())
     val selectedInterests: StateFlow<Set<String>> = _selectedInterests.asStateFlow()
 
-    init {
+    /*init {
         viewModelScope.launch {
             getSelectedInterestsUseCase().collect { interests ->
                 _selectedInterests.value = interests
             }
         }
-    }
+    }*/
 
     fun updateSelectedInterests(newInterest: String, isSelected: Boolean) {
         val currentInterests = _selectedInterests.value
@@ -40,6 +40,7 @@ class OnBoardingInterestViewModel @Inject constructor(
 
         viewModelScope.launch {
             setSelectedInterestsUseCase(updatedInterests)
+            _selectedInterests.value = updatedInterests
         }
     }
 

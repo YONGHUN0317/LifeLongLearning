@@ -1,4 +1,4 @@
-package com.example.data2
+package com.src.data
 
 import org.junit.Test
 

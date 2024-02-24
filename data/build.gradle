@@ -8,9 +8,10 @@ plugins {
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 def google_map_key = properties.getProperty('google_map_key')
-def public_apikey = properties.getProperty('public_apikey')
+def mongodb_apikey = properties.getProperty('mongodb_apikey')
+
 android {
-    namespace 'com.example.data2'
+    namespace 'com.src.data'
     compileSdk 34
 
     defaultConfig {
@@ -20,7 +21,8 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
         manifestPlaceholders= [googleMapKey: google_map_key]
-        manifestPlaceholders= [publicKey: public_apikey]
+        manifestPlaceholders= [mongoDBKey: mongodb_apikey]
+
     }
 
     buildTypes {

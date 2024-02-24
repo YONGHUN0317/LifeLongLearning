@@ -24,7 +24,6 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
-        buildConfigField "String", "PUBLIC_APIKEY", properties["public_apikey"]
         buildConfigField "String", "NAVER_APIKEY", properties["naver_apikey"]
         manifestPlaceholders= [googleMapKey: google_map_key]
     }
@@ -63,33 +62,32 @@ dependencies {
     implementation 'com.google.maps.android:maps-compose:2.14.0'
     implementation 'com.google.maps.android:maps-compose-utils:2.14.0'
     implementation 'com.google.android.gms:play-services-maps:18.2.0'
-    implementation 'androidx.navigation:navigation-compose:2.7.4'
-    implementation 'com.google.android.libraries.places:places:3.2.0'
+    implementation 'androidx.navigation:navigation-compose:2.7.7'
+    implementation 'com.google.android.libraries.places:places:3.3.0'
     implementation 'com.google.maps.android:maps-compose-widgets:2.14.0'
 
     implementation project(':data')
     implementation project(':domain')
     implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'io.github.muddz:styleabletoast:2.4.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.2'
-    implementation 'androidx.activity:activity-compose:1.8.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.7.0'
+    implementation 'androidx.activity:activity-compose:1.8.2'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.gms:play-services-location:21.0.1'
+    implementation 'com.google.android.gms:play-services-location:21.1.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.8.10"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.10"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.10"
     // hilt
-    implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
+    implementation "androidx.hilt:hilt-navigation-compose:1.1.0"
     implementation "com.google.dagger:hilt-android:2.48.1"
-    implementation 'androidx.compose.material3:material3-desktop:1.2.0'
     kapt "com.google.dagger:hilt-compiler:2.48.1"
 
     implementation platform('androidx.compose:compose-bom:2022.10.00')
     implementation 'androidx.compose.ui:ui'
     implementation 'androidx.compose.ui:ui-graphics'
     implementation 'androidx.compose.ui:ui-tooling-preview'
-    implementation "androidx.compose.material3:material3:1.1.2"
-    implementation "androidx.compose.material3:material3-window-size-class:1.1.2"
+    implementation "androidx.compose.material3:material3:1.2.0"
+    implementation "androidx.compose.material3:material3-window-size-class:1.2.0"
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
@@ -99,9 +97,9 @@ dependencies {
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.2'
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
-    implementation "androidx.paging:paging-compose:3.3.0-alpha02"
-    implementation 'androidx.compose.runtime:runtime:1.5.4'
-    implementation 'androidx.compose.runtime:runtime-livedata:1.5.4'
+    implementation "androidx.paging:paging-compose:3.3.0-alpha03"
+    implementation 'androidx.compose.runtime:runtime:1.6.1'
+    implementation 'androidx.compose.runtime:runtime-livedata:1.6.1'
     implementation "io.coil-kt:coil-compose:1.4.0"
 
     // paging 관련
