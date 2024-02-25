@@ -23,6 +23,10 @@ android {
         manifestPlaceholders= [googleMapKey: google_map_key]
         manifestPlaceholders= [mongoDBKey: mongodb_apikey]
 
+        def localProperties = new Properties()
+        localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+        buildConfigField("String", "mongoDBKey", localProperties['mongodb_apikey'])
+
     }
 
     buildTypes {

@@ -19,17 +19,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.src.domain.model.Lecture
+import com.src.domain.model.LectureEntity
 import com.src.presentation.ui.theme.LifeLongLearningTheme
-import kotlinx.coroutines.flow.Flow
 
 
 @Composable
-fun SearchView(viewModel: SearchViewModel = hiltViewModel(), navController: NavController){
-    val lectures: LazyPagingItems<Lecture> = viewModel.lectures.collectAsLazyPagingItems()
+fun SearchView(viewModel: SearchViewModel = hiltViewModel(), navController: NavController? = null){
+    val lectures: LazyPagingItems<LectureEntity> = viewModel.lectures.collectAsLazyPagingItems()
     LazyColumn(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -40,6 +38,8 @@ fun SearchView(viewModel: SearchViewModel = hiltViewModel(), navController: NavC
         }
     }
 }
+
+
 
 @Composable
 fun Item(title: String, location : String, date: String){
@@ -80,12 +80,11 @@ fun Item(title: String, location : String, date: String){
         }
     }
 }
-/*
 
 @Preview(showBackground = true)
 @Composable
-fun SplashLocationPreView() {
+fun SearchViewPreView() {
     LifeLongLearningTheme {
         SearchView()
     }
-}*/
+}

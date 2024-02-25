@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class Lecture(
+data class LectureEntity(
     val lctreNm: String,
     val instrctrNm: String,
     val edcStartDay: String,
@@ -30,5 +30,24 @@ data class Lecture(
     val pntBankAckestYn: String,
     val lrnAcnutAckestYn: String,
     val referenceDate: String,
-    val insttCode: String
+    val insttCode: String,
+    val lectureName: String,
+    val instructorName: String,
+    val startDay: String,
+    val endDay: String,
+    val startTime: String,
+    val closeTime: String,
+    val lectureContent: String,
+    val targetType: String,
+    val methodType: String,
+    val operatingDay: String,
+    val place: String,
+    val capacity: Int,
+    val cost: Int,
+    val address: String,
+    val operatingInstitutionName: String,
+    val operatingPhoneNumber: String,
+    val registrationStartDate: String,
+    val registrationEndDate: String,
+    val registrationMethodType: String
 ) : Parcelable

@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.src.domain.model.Lecture
+import com.src.domain.model.LectureEntity
 import com.src.domain.usecase.GetLecturesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -15,7 +15,7 @@ class SearchViewModel @Inject constructor(
     getLecturesUseCase: GetLecturesUseCase
 ) : ViewModel() {
 
-    val lectures: Flow<PagingData<Lecture>> = getLecturesUseCase.execute()
+    val lectures: Flow<PagingData<LectureEntity>> = getLecturesUseCase.execute()
         .cachedIn(viewModelScope)
 
 }

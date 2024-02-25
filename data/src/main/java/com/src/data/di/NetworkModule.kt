@@ -1,6 +1,7 @@
 package com.src.data.di
 
-import com.src.data.db.LectureDao
+import com.src.data.BuildConfig.mongoDBKey
+import com.src.data.datasource.remote.LectureApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,7 +37,7 @@ object NetworkModule {
     @Provides
     fun provideRetrofit(client: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("http://localhost:3000/")
+            .baseUrl(mongoDBKey)
             .client(client)
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
@@ -45,6 +46,6 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideApiInterface(retrofit: Retrofit): LectureDao =
-        retrofit.create(LectureDao::class.java)
+    fun provideApiInterface(retrofit: Retrofit): LectureApiService =
+        retrofit.create(LectureApiService::class.java)
 }
