@@ -1,6 +1,7 @@
 package com.src.data.di
 
-import com.src.data.db.LectureDao
+import com.src.data.datasource.remote.LectureApiService
+import com.src.data.model.LectureData
 import com.src.data.repository.LectureRepositoryImpl
 import com.src.domain.repository.LectureRepository
 import dagger.Module
@@ -13,6 +14,6 @@ import dagger.hilt.components.SingletonComponent
 object LectureRepositoryModule {
 
     @Provides
-    fun provideLectureRepository(lectureDao: LectureDao): LectureRepository =
-        LectureRepositoryImpl(lectureDao)
+    fun provideLectureRepository(lectureApiService: LectureApiService): LectureRepository =
+        LectureRepositoryImpl(lectureApiService)
 }

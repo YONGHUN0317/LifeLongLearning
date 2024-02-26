@@ -14,7 +14,7 @@ class GetLecturesUseCase  @Inject constructor(
     fun execute(): Flow<PagingData<LectureEntity>> {
         return Pager(
             config = PagingConfig(
-                pageSize = 20, // Define your page size
+                pageSize = 20,
                 enablePlaceholders = false
             ),
             pagingSourceFactory = { lectureRepository.getLecturesPaged() }
