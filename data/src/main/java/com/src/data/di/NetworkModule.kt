@@ -1,5 +1,9 @@
 package com.src.data.di
 
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonParser
+import com.google.gson.JsonSyntaxException
+import com.src.data.BuildConfig
 import com.src.data.BuildConfig.mongoDBKey
 import com.src.data.datasource.remote.LectureApiService
 import dagger.Module
@@ -9,7 +13,6 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
@@ -21,7 +24,11 @@ object NetworkModule {
     @Provides
     fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
         return HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BASIC
+            level = if (BuildConfig.DEBUG) {
+                HttpLoggingInterceptor.Level.BODY // 디버그 모드에서는 BODY 레벨 로깅
+            } else {
+                HttpLoggingInterceptor.Level.NONE // 릴리스 모드에서는 로깅 비활성화
+            }
         }
     }
 
@@ -39,7 +46,6 @@ object NetworkModule {
         return Retrofit.Builder()
             .baseUrl(mongoDBKey)
             .client(client)
-            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }

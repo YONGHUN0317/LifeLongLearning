@@ -1,5 +1,6 @@
 package com.src.presentation.views.search
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,6 +12,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -28,12 +30,19 @@ import com.src.presentation.ui.theme.LifeLongLearningTheme
 @Composable
 fun SearchView(viewModel: SearchViewModel = hiltViewModel(), navController: NavController? = null){
     val lectures: LazyPagingItems<LectureEntity> = viewModel.lectures.collectAsLazyPagingItems()
+
+    LaunchedEffect(lectures.itemCount) {
+        Log.d("SearchView", "Current item count: ${lectures.itemCount}")
+    }
+
     LazyColumn(
         modifier = Modifier.fillMaxSize()
     ) {
         items(lectures.itemCount) { index ->
             lectures[index]?.let { lecture ->
                 Item(title = lecture.lctreNm, location = lecture.edcRdnmadr, date = lecture.edcStartDay)
+
+                Log.d("SearchView", "Loading item at index $index: ${lecture.lctreNm}")
             }
         }
     }

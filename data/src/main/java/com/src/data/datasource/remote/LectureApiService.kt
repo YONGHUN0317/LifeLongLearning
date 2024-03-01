@@ -6,5 +6,5 @@ import retrofit2.http.GET
 
 interface LectureApiService {
     @GET("/lifelonglearning/lecture_info")
-    fun getAllLectures(): Flow<List<LectureData>>
+    suspend fun getAllLectures(): List<LectureData>
 }
