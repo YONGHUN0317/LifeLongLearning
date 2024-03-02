@@ -8,13 +8,25 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Divider
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -28,34 +40,53 @@ import com.src.presentation.ui.theme.LifeLongLearningTheme
 
 
 @Composable
-fun SearchView(viewModel: SearchViewModel = hiltViewModel(), navController: NavController? = null){
-    val lectures: LazyPagingItems<LectureEntity> = viewModel.lectures.collectAsLazyPagingItems()
+fun SearchView(viewModel: SearchViewModel = hiltViewModel(), navController: NavController? = null) {
+    val searchQuery = remember { mutableStateOf("") }
 
-    LaunchedEffect(lectures.itemCount) {
-        Log.d("SearchView", "Current item count: ${lectures.itemCount}")
-    }
+    Column {
+        CustomSearchBar(
+            searchQuery = searchQuery.value,
+            onSearchQueryChanged = { query ->
+                searchQuery.value = query
+                viewModel.searchLectures(query) // Update your ViewModel to handle search queries.
+            },
+            onClearQuery = {
+                searchQuery.value = ""
+                viewModel.searchLectures("") // Reset the search query.
+            }
+        )
+        val lectures: LazyPagingItems<LectureEntity> = viewModel.lectures.collectAsLazyPagingItems()
 
-    LazyColumn(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        items(lectures.itemCount) { index ->
-            lectures[index]?.let { lecture ->
-                Item(title = lecture.lctreNm, location = lecture.edcRdnmadr, date = lecture.edcStartDay)
+        LaunchedEffect(lectures.itemCount) {
+            Log.d("SearchView", "현재 아이템: ${lectures.itemCount}")
+        }
 
-                Log.d("SearchView", "Loading item at index $index: ${lecture.lctreNm}")
+        LazyColumn(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            items(lectures.itemCount) { index ->
+                lectures[index]?.let { lecture ->
+                    Item(
+                        title = lecture.lctreNm,
+                        location = lecture.edcRdnmadr,
+                        date = lecture.edcStartDay
+                    )
+
+                    Log.d("SearchView", "인덱스 $index: ${lecture.lctreNm}")
+                }
             }
         }
     }
 }
 
 
-
 @Composable
-fun Item(title: String, location : String, date: String){
+fun Item(title: String, location: String, date: String) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 20.dp)
+            .padding(bottom = 10.dp)
     ) {
         Column(
             modifier = Modifier.fillMaxSize()
@@ -79,15 +110,56 @@ fun Item(title: String, location : String, date: String){
                     fontSize = 18.sp,
                 ),
             )
-            Divider(
-                color = Color.Black,
+            HorizontalDivider(
                 modifier = Modifier
                     .fillMaxWidth()
                     .width(1.dp)
-                    .padding(horizontal = 20.dp)
+                    .padding(horizontal = 15.dp),
+                color = Color.Black
             )
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CustomSearchBar(
+    searchQuery: String,
+    onSearchQueryChanged: (String) -> Unit,
+    onClearQuery: () -> Unit
+) {
+
+    val textStyle = TextStyle(
+        fontSize = 18.sp,
+        fontWeight = FontWeight.Bold
+    )
+    TextField(
+        value = searchQuery,
+        onValueChange = onSearchQueryChanged,
+        singleLine = true,
+        textStyle = textStyle,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        placeholder = { Text("Search...") },
+        leadingIcon = {
+            Icon(Icons.Default.Search, contentDescription = "Search Icon")
+        },
+        trailingIcon = {
+            if (searchQuery.isNotEmpty()) {
+                IconButton(onClick = onClearQuery) {
+                    Icon(Icons.Default.Close, contentDescription = "Clear Icon")
+                }
+            }
+        },
+        colors = TextFieldDefaults.textFieldColors(
+            cursorColor = Color.Black,
+            containerColor = Color(0xFFE6E6E6),
+            focusedIndicatorColor = Color(0xFFFFA500),
+            unfocusedIndicatorColor = Color.LightGray
+        ),
+        shape = RoundedCornerShape(8.dp)
+    )
 }
 
 @Preview(showBackground = true)

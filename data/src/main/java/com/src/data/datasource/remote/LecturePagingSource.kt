@@ -1,13 +1,9 @@
 package com.src.data.datasource.remote
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.src.data.mapper.Mapper
-import com.src.data.model.LectureData
 import com.src.domain.model.LectureEntity
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import java.io.IOException
 import javax.inject.Inject
 
@@ -17,38 +13,32 @@ class LecturePagingSource @Inject constructor(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, LectureEntity> {
         val pageNumber = params.key ?: 1
+        val pageSize = 20
+
         try {
-            val dataList = lectureApiService.getAllLectures()
-
-            Log.d("LecturePagingSource", dataList.toString())
-
-            // Map dataList to List<LectureEntity>
-            val response = dataList.map { data ->
-                Mapper.mapLectureDataToEntity(data)
-            }
+            val response = lectureApiService.getLecturesByPage(page = pageNumber, size = pageSize)
+            val data = response.map(Mapper::mapLectureDataToEntity)
 
             val prevKey = if (pageNumber > 1) pageNumber - 1 else null
-            val nextKey = if (response.isNotEmpty()) pageNumber + 1 else null
+            val nextKey = if (data.isNotEmpty()) pageNumber + 1 else null
 
             return LoadResult.Page(
-                data = response,
+                data = data,
                 prevKey = prevKey,
                 nextKey = nextKey
             )
         } catch (exception: IOException) {
-            Log.d("LecturePagingSource1", exception.toString())
             return LoadResult.Error(exception)
         } catch (exception: Exception) {
-            Log.d("LecturePagingSource2", exception.toString())
             return LoadResult.Error(exception)
         }
     }
 
-
     override fun getRefreshKey(state: PagingState<Int, LectureEntity>): Int? {
-        return state.anchorPosition?.let { anchorPosition ->
-            val anchorPage = state.closestPageToPosition(anchorPosition)
-            anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
+        // Logic to determine which page to refresh from
+        return state.anchorPosition?.let { position ->
+            state.closestPageToPosition(position)?.prevKey?.plus(1)
+                ?: state.closestPageToPosition(position)?.nextKey?.minus(1)
         }
     }
 }

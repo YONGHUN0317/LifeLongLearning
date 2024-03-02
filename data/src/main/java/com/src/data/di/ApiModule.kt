@@ -13,12 +13,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 @Module
 class ApiModule {
-    /*@Singleton
-    @Provides
-    fun provideApiService(): ApiInterface {
-        return ApiInterface.create()
-    }*/
-
 
     @Singleton
     @Provides

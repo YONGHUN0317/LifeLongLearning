@@ -8,10 +8,10 @@ import com.src.domain.repository.LectureRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetLecturesUseCase  @Inject constructor(
+class GetLecturesUseCase @Inject constructor(
     private val lectureRepository: LectureRepository
 ) {
-    fun execute(): Flow<PagingData<LectureEntity>> {
+    operator fun invoke(): Flow<PagingData<LectureEntity>> {
         return Pager(
             config = PagingConfig(
                 pageSize = 20,
