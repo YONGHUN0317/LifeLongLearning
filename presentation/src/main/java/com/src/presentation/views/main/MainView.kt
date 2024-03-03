@@ -64,6 +64,7 @@ fun MainView(viewModel: MainViewModel = hiltViewModel(),
              navController: NavController) {
     val selectedInterests by viewModel.selectedInterests.collectAsState()
     val remainingInterests by viewModel.remainingInterests.collectAsState()
+    val location by viewModel.location.collectAsState()
     val context = LocalContext.current
 
 
@@ -93,7 +94,7 @@ fun MainView(viewModel: MainViewModel = hiltViewModel(),
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 15.dp)
+            .padding(top = 13.dp)
     ) {
         Column {
             Text(
@@ -118,9 +119,16 @@ fun MainView(viewModel: MainViewModel = hiltViewModel(),
                     modifier = Modifier
                         .size(24.dp, 24.dp)
                 )
+
                 Text(
-                    text = "서울특별시 구로구 구일로4길 65",
-                    modifier = Modifier.padding(start = 8.dp)
+                    fontWeight = FontWeight.Bold,
+                    text = location,
+                    modifier = Modifier
+                        .padding(start = 8.dp, top = 3.dp)
+                        .clickable {
+                            navController.navigate("splashLocation")
+                        },
+                    style = TextStyle(fontSize = 14.sp),
                 )
             }
             Image(

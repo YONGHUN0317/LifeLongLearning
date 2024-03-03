@@ -8,10 +8,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -22,8 +24,11 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -37,25 +42,34 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.src.domain.model.LectureEntity
 import com.src.presentation.ui.theme.LifeLongLearningTheme
+import com.src.utils.Resource
 
 
 @Composable
 fun SearchView(viewModel: SearchViewModel = hiltViewModel(), navController: NavController? = null) {
     val searchQuery = remember { mutableStateOf("") }
-
+    val searchResults by viewModel.searchResults.collectAsState()
+    val isSearching = remember(searchQuery.value) { searchQuery.value.isNotEmpty() }
+    val lectures: LazyPagingItems<LectureEntity> = viewModel.lectures.collectAsLazyPagingItems()
     Column {
         CustomSearchBar(
             searchQuery = searchQuery.value,
             onSearchQueryChanged = { query ->
                 searchQuery.value = query
-                viewModel.searchLectures(query) // Update your ViewModel to handle search queries.
+                viewModel.searchLectures(query)
             },
             onClearQuery = {
                 searchQuery.value = ""
-                viewModel.searchLectures("") // Reset the search query.
+                viewModel.searchLectures("")
             }
         )
-        val lectures: LazyPagingItems<LectureEntity> = viewModel.lectures.collectAsLazyPagingItems()
+
+        if (isSearching) {
+            DisplaySearchResults(searchResults)
+        } else {
+            DisplayPaginatedLectures(viewModel)
+        }
+        //val lectures: LazyPagingItems<LectureEntity> = viewModel.lectures.collectAsLazyPagingItems()
 
         LaunchedEffect(lectures.itemCount) {
             Log.d("SearchView", "현재 아이템: ${lectures.itemCount}")
@@ -74,6 +88,49 @@ fun SearchView(viewModel: SearchViewModel = hiltViewModel(), navController: NavC
 
                     Log.d("SearchView", "인덱스 $index: ${lecture.lctreNm}")
                 }
+            }
+        }
+    }
+}
+@Composable
+fun DisplaySearchResults(searchResults: Resource<List<LectureEntity>>) {
+    when (searchResults) {
+        is Resource.Loading -> {
+            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                CircularProgressIndicator()
+            }
+        }
+        is Resource.Success -> {
+            val lectures = searchResults.data ?: emptyList()
+            LazyColumn {
+                items(lectures) { lecture ->
+                    Item(
+                        title = lecture.lctreNm,
+                        location = lecture.edcRdnmadr,
+                        date = lecture.edcStartDay
+                    )
+                }
+            }
+        }
+        is Resource.Error -> {
+            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                Text(text = "에러 : ${searchResults.message}")
+            }
+        }
+    }
+}
+
+@Composable
+fun DisplayPaginatedLectures(viewModel: SearchViewModel) {
+    val lectures = viewModel.lectures.collectAsLazyPagingItems()
+    LazyColumn {
+        items(lectures.itemCount) { index ->
+            lectures[index]?.let { lecture ->
+                Item(
+                    title = lecture.lctreNm,
+                    location = lecture.edcRdnmadr,
+                    date = lecture.edcStartDay
+                )
             }
         }
     }

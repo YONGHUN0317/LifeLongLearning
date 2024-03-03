@@ -6,7 +6,8 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.src.domain.model.LectureEntity
 import com.src.domain.usecase.GetLecturesUseCase
-import com.src.domain.usecase.GetSearchUseCase
+import com.src.domain.usecase.GetFilteredDataUseCase
+import com.src.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -19,20 +20,21 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val getLecturesUseCase: GetLecturesUseCase,
-    private val getSearchUseCase: GetSearchUseCase
+    getLecturesUseCase: GetLecturesUseCase,
+    private val getFilteredDataUseCase: GetFilteredDataUseCase
 ) : ViewModel() {
     val lectures: SharedFlow<PagingData<LectureEntity>> = getLecturesUseCase.invoke()
         .cachedIn(viewModelScope)
         .shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
 
-    private val _searchResults = MutableStateFlow<List<LectureEntity>>(emptyList())
-    val searchResults: StateFlow<List<LectureEntity>> = _searchResults.asStateFlow()
+    private val _searchResults = MutableStateFlow<Resource<List<LectureEntity>>>(Resource.Loading())
+    val searchResults: StateFlow<Resource<List<LectureEntity>>> = _searchResults.asStateFlow()
 
     fun searchLectures(query: String) {
         viewModelScope.launch {
-            getSearchUseCase.invoke(query).collect { results ->
-                _searchResults.value = results
+            _searchResults.value = Resource.Loading()
+            getFilteredDataUseCase.invoke(query).collect { result ->
+                _searchResults.value = result
             }
         }
     }

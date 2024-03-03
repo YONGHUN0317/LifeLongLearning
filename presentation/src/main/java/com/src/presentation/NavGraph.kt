@@ -30,7 +30,6 @@ fun OnboardScreen() {
         }
         composable("main") {
             MainView(navController = navController)
-
         }
     }
 }
@@ -48,6 +47,10 @@ fun Main() {
 
         composable("search") {
             SearchView(navController = navController)
+        }
+
+        composable("splashLocation") {
+            OnBoardingLocationView(navController)
         }
     }
 }
