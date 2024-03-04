@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.src.presentation.views.DetailPage
 import com.src.presentation.views.allow.AllowScreen
 import com.src.presentation.views.main.MainView
 import com.src.presentation.views.onBoarding_first.OnBoardingFirstView
@@ -42,15 +43,16 @@ fun Main() {
     NavHost(navController = navController, startDestination = "main") {
         composable("main") {
             MainView(navController = navController)
-
         }
-
         composable("search") {
             SearchView(navController = navController)
         }
 
         composable("splashLocation") {
             OnBoardingLocationView(navController)
+        }
+        composable("searchDetail") {
+            DetailPage(navController)
         }
     }
 }

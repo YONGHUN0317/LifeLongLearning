@@ -30,6 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -84,6 +85,7 @@ fun OnBoardingLocationView(
     if (!Places.isInitialized()) {
         Places.initialize(context, google_map_key, Locale.getDefault())
     }
+    val location by viewModel.userLocation.collectAsState()
     val placesClient: PlacesClient = Places.createClient(context)
     val fusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(LocalContext.current)
@@ -104,7 +106,7 @@ fun OnBoardingLocationView(
                     place.latLng?.let { CameraPosition.fromLatLngZoom(it, 16f) }!!
             }
             .addOnFailureListener { exception ->
-                Log.e("SplashLocationView", "Error fetching place details: ${exception.message}")
+                Log.e("SplashLocationView", "장소 세부 정보 가져오기 오류: ${exception.message}")
             }
     }
 

@@ -12,33 +12,7 @@ interface LocalDataSource  {
     suspend fun getSelectedInterests(): Flow<Set<String>>
     suspend fun setSelectedInterests(interests: Set<String>)
 
-    suspend fun getLocation(): String
-    suspend fun setLocation(location: String)
+    suspend fun getLocation(): Triple<String, String, String>
+    suspend fun setLocation(location: String, latitude: String, longitude: String)
 }
 
-/*class LocalDataSourceImpl(private val dataStore: DataStore<Preferences>) : LocalDataSource {
-    private val selectedInterestsKey = stringSetPreferencesKey("selected_interests")
-    private val userLocationKey = stringPreferencesKey("user_location")
-
-    override suspend fun getSelectedInterests(): Set<String> {
-        val preferences = dataStore.data.first()
-        return preferences[selectedInterestsKey] ?: setOf()
-    }
-
-    override suspend fun setSelectedInterests(interests: Set<String>) {
-        dataStore.edit { preferences ->
-            preferences[selectedInterestsKey] = interests
-        }
-    }
-
-    override suspend fun getLocation(): String {
-        val preferences = dataStore.data.first()
-        return preferences[userLocationKey] ?: ""
-    }
-
-    override suspend fun setLocation(location: String) {
-        dataStore.edit { preferences ->
-            preferences[userLocationKey] = location
-        }
-    }
-}*/

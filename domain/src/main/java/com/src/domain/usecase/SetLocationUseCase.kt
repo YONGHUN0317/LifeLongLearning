@@ -5,5 +5,5 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class SetLocationUseCase @Inject constructor(private val repository: LocationRepository) {
-    suspend operator fun invoke(location: String) = repository.setLocation(location)
+    suspend operator fun invoke(location: String, latitude: String, longitude: String) = repository.setLocation(location, latitude, longitude)
 }
