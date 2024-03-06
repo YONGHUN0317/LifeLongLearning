@@ -64,6 +64,7 @@ fun MainView(viewModel: MainViewModel = hiltViewModel(),
              navController: NavController) {
     val selectedInterests by viewModel.selectedInterests.collectAsState()
     val remainingInterests by viewModel.remainingInterests.collectAsState()
+    val userLocation by viewModel.location.collectAsState()
     val context = LocalContext.current
 
 
@@ -119,8 +120,9 @@ fun MainView(viewModel: MainViewModel = hiltViewModel(),
                         .size(24.dp, 24.dp)
                 )
                 Text(
-                    text = "서울특별시 구로구 구일로4길 65",
-                    modifier = Modifier.padding(start = 8.dp)
+                    text = userLocation,
+                    modifier = Modifier.padding(start = 8.dp, top = 3.dp),
+                    style = TextStyle(fontWeight = FontWeight.Bold) // 볼드체로 변경
                 )
             }
             Image(
