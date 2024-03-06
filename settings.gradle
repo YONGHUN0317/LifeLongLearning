@@ -17,4 +17,3 @@ rootProject.name = "LifeLongLearning"
 include ':presentation'
 include ':domain'
 include ':data'
-include ':utils'
