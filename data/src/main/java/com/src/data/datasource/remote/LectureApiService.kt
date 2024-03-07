@@ -13,7 +13,7 @@ interface LectureApiService {
     ): List<LectureData>
 
 
-    @GET("/lifelonglearning/lecture_info")
+    @GET("/lifelonglearning/lecture_info/search")
     suspend fun getSearch(
         @Query("lctreNm") lctreNm: String,
     ): List<LectureData>

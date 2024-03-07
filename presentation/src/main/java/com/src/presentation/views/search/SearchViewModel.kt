@@ -8,11 +8,14 @@ import com.src.domain.model.LectureEntity
 import com.src.domain.usecase.GetLecturesUseCase
 import com.src.domain.usecase.GetSearchUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,18 +25,21 @@ class SearchViewModel @Inject constructor(
     private val getLecturesUseCase: GetLecturesUseCase,
     private val getSearchUseCase: GetSearchUseCase
 ) : ViewModel() {
-    val lectures: SharedFlow<PagingData<LectureEntity>> = getLecturesUseCase.invoke()
-        .cachedIn(viewModelScope)
-        .shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
+    private val currentQuery = MutableStateFlow<String?>(null)
 
-    private val _searchResults = MutableStateFlow<List<LectureEntity>>(emptyList())
-    val searchResults: StateFlow<List<LectureEntity>> = _searchResults.asStateFlow()
+    /**
+     *  데이터가 있는 경우 없는 경우 구분
+     */
 
-    fun searchLectures(query: String) {
-        viewModelScope.launch {
-            getSearchUseCase.invoke(query).collect { results ->
-                _searchResults.value = results
-            }
+    val lectures: Flow<PagingData<LectureEntity>> = currentQuery.flatMapLatest { query ->
+        if (query.isNullOrEmpty()) {
+            getLecturesUseCase().cachedIn(viewModelScope)
+        } else {
+            getSearchUseCase(query).cachedIn(viewModelScope)
         }
+    }
+
+    fun searchLectures(query: String?) {
+        currentQuery.value = query
     }
 }

@@ -1,6 +1,5 @@
 package com.src.data.di
 
-import com.src.data.datasource.remote.LecturePagingSource
 import com.src.data.repository.GeocodingRepositoryImpl
 import com.src.data.repository.InterestRepositoryImpl
 import com.src.data.repository.LocationRepositoryImpl

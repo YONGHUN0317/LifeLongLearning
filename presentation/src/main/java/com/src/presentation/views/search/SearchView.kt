@@ -48,11 +48,11 @@ fun SearchView(viewModel: SearchViewModel = hiltViewModel(), navController: NavC
             searchQuery = searchQuery.value,
             onSearchQueryChanged = { query ->
                 searchQuery.value = query
-                viewModel.searchLectures(query) // Update your ViewModel to handle search queries.
+                viewModel.searchLectures(query)
             },
             onClearQuery = {
                 searchQuery.value = ""
-                viewModel.searchLectures("") // Reset the search query.
+                viewModel.searchLectures("")
             }
         )
         val lectures: LazyPagingItems<LectureEntity> = viewModel.lectures.collectAsLazyPagingItems()
@@ -76,6 +76,8 @@ fun SearchView(viewModel: SearchViewModel = hiltViewModel(), navController: NavC
                 }
             }
         }
+
+
     }
 }
 

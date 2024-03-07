@@ -8,7 +8,8 @@ import java.io.IOException
 import javax.inject.Inject
 
 class LecturePagingSource @Inject constructor(
-    private val lectureApiService: LectureApiService
+    private val lectureApiService: LectureApiService,
+    private val query: String? // Nullable search query
 ) : PagingSource<Int, LectureEntity>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, LectureEntity> {
@@ -16,12 +17,14 @@ class LecturePagingSource @Inject constructor(
         val pageSize = 20
 
         try {
-            val response = lectureApiService.getLecturesByPage(page = pageNumber, size = pageSize)
+            val response = if (query.isNullOrEmpty()) {
+                lectureApiService.getLecturesByPage(page = pageNumber, size = pageSize)
+            } else {
+                lectureApiService.getSearch(lctreNm = query)
+            }
             val data = response.map(Mapper::mapLectureDataToEntity)
-
             val prevKey = if (pageNumber > 1) pageNumber - 1 else null
             val nextKey = if (data.isNotEmpty()) pageNumber + 1 else null
-
             return LoadResult.Page(
                 data = data,
                 prevKey = prevKey,
@@ -35,7 +38,6 @@ class LecturePagingSource @Inject constructor(
     }
 
     override fun getRefreshKey(state: PagingState<Int, LectureEntity>): Int? {
-        // Logic to determine which page to refresh from
         return state.anchorPosition?.let { position ->
             state.closestPageToPosition(position)?.prevKey?.plus(1)
                 ?: state.closestPageToPosition(position)?.nextKey?.minus(1)
