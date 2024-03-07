@@ -1,3 +1,4 @@
+/*
 package com.src.data.repository
 
 import com.src.data.datasource.local.LocalDataSource
@@ -7,11 +8,11 @@ class LocationRepository  @Inject constructor(
     private val localDataSource: LocalDataSource
 ) {
 
-    suspend fun getLocation(): String {
+    suspend fun getLocation(): Triple<String, String, String> {
         return localDataSource.getLocation()
     }
 
-    suspend fun setLocation(location: String) {
-        localDataSource.setLocation(location)
+    suspend fun setLocation(location: String, latitude: String, longitude: String) {
+        localDataSource.setLocation(location, latitude, longitude)
     }
-}
+}*/

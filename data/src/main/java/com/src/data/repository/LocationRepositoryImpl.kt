@@ -9,9 +9,11 @@ import javax.inject.Inject
 class LocationRepositoryImpl @Inject constructor(
     private val localDataSource: LocalDataSource
 ) : LocationRepository {
-    override fun getLocation(): Flow<String> = flow {
+    override fun getLocation(): Flow<Triple<String, String, String>> = flow {
         emit(localDataSource.getLocation())
     }
 
-    override suspend fun setLocation(location: String) = localDataSource.setLocation(location)
+    override suspend fun setLocation(location: String, latitude: String, longitude: String) {
+        localDataSource.setLocation(location, latitude, longitude)
+    }
 }

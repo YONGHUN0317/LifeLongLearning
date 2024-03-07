@@ -13,6 +13,8 @@ import com.src.domain.usecase.GetAddressFromLocationUseCase
 import com.src.domain.usecase.GetLocationUseCase
 import com.src.domain.usecase.SetLocationUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,15 +26,17 @@ class OnBoardingLocationViewModel @Inject constructor(
     private val getAddressFromLocationUseCase: GetAddressFromLocationUseCase
 ) : ViewModel() {
 
-    private val _userLocation = MutableLiveData<String>()
-    val userLocation: LiveData<String> = _userLocation
+    private val _userLocation = MutableStateFlow("")
+    val userLocation: StateFlow<String> = _userLocation
 
     fun updateLocation(coordinates: Pair<Double, Double>) {
         viewModelScope.launch {
             val address = getAddressFromLocationUseCase(coordinates.first, coordinates.second).first()
             Log.d("SplashLocationViewModel", "repository: $address")
             setLocationUseCase(address)
-            _userLocation.value = address
+            getLocationUseCase().collect{ locationValue ->
+                _userLocation.value = locationValue
+            }
         }
     }
 }

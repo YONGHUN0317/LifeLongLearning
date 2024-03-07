@@ -28,14 +28,22 @@ class LocalDataSourceImpl(private val dataStore: DataStore<Preferences>) : Local
         }
     }
 
-    override suspend fun getLocation(): String {
+    override suspend fun getLocation(): Triple<String, String, String> {
         val preferences = dataStore.data.first()
-        return preferences[userLocationKey] ?: ""
-    }
-
-    override suspend fun setLocation(location: String) {
-        dataStore.edit { preferences ->
-            preferences[userLocationKey] = location
+        val combinedLocation = preferences[userLocationKey] ?: ""
+        val parts = combinedLocation.split(",")
+        return if (parts.size == 3) {
+            Triple(parts[0], parts[1], parts[2])
+        } else {
+            Triple("", "", "")
         }
     }
+
+    override suspend fun setLocation(latitude: String, longitude: String, locationDescription: String) {
+        val combinedLocation = "$latitude,$longitude,$locationDescription"
+        dataStore.edit { preferences ->
+            preferences[userLocationKey] = combinedLocation
+        }
+    }
+
 }
