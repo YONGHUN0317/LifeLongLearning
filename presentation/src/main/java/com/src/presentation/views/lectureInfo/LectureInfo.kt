@@ -237,7 +237,7 @@ fun InformationCardSection() {
                             val intent = Intent(Intent.ACTION_DIAL).apply {
                                 //data = Uri.parse("tel:$phoneNumber")
                             }
-                            context.startActivity(intent) // Start the dialer activity
+                            context.startActivity(intent)
                         }
                 )
             }
@@ -450,19 +450,19 @@ fun DetailTopAppBarOverlay() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .zIndex(10f) // Ensure it's above the Map
+            .zIndex(10f) // 지도 위에 있는지 확인
     ) {
         TopAppBar(
-            title = { /* Title can be empty if you only need the navigation icon */ },
+            title = { /* 탐색 아이콘만 필요한 경우 제목을 비워둘 수 있습니다.*/ },
             navigationIcon = {
                 IconButton(onClick = { /* TODO: handle navigation */ }) {
                     Icon(Icons.Filled.ArrowBack, contentDescription = "뒤로가기")
                 }
             },
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Color.Transparent, // Make AppBar background transparent
-                navigationIconContentColor = Color.White, // Adjust icon color as needed
-                titleContentColor = Color.Transparent // Ensure title text color matches
+                containerColor = Color.Transparent, // 앱바 투명
+                navigationIconContentColor = Color.White,
+                titleContentColor = Color.Transparent
             )
         )
     }
@@ -474,7 +474,7 @@ fun CommentSection(teacherName: String, profilePicture: String) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
-        verticalAlignment = Alignment.CenterVertically // Align items in the center vertically
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
             painter = rememberAsyncImagePainter(profilePicture),
