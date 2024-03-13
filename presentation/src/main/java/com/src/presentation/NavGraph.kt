@@ -1,9 +1,12 @@
 package com.src.presentation
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.src.domain.model.LectureEntity
 import com.src.presentation.views.DetailPage
 import com.src.presentation.views.allow.AllowScreen
 import com.src.presentation.views.lectureInfo.DetailPage
@@ -41,7 +44,6 @@ fun OnboardScreen() {
 @Composable
 fun Main() {
     val navController = rememberNavController()
-
     NavHost(navController = navController, startDestination = "main") {
         composable("main") {
             MainView(navController = navController)
@@ -51,10 +53,15 @@ fun Main() {
         }
 
         composable("lectureInfo") {
-            DetailPage(navController = navController)
+            DetailPage()
         }
-        composable("searchDetail") {
-            DetailPage(navController)
+
+        composable(
+            "lectureInfo/{lecture}",
+            arguments = listOf(navArgument("lecture") { type = NavType.ParcelableType(LectureEntity::class.java) })
+        ) { backStackEntry ->
+            val lecture = backStackEntry.arguments?.getParcelable<LectureEntity>("lecture")
+            DetailPage(lecture = lecture!!)
         }
     }
 }

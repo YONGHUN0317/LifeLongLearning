@@ -1,6 +1,7 @@
 package com.src.presentation.views.lectureInfo
 
 import android.content.Intent
+import android.location.Location
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -45,14 +46,21 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import android.net.Uri
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.NavController
+import androidx.core.location.component1
+import androidx.core.location.component2
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.src.domain.model.LectureEntity
 
 
 @Composable
-fun DetailPage(navController: NavController? = null) {
+fun DetailPage(viewModel: LectureInfoViewModel = hiltViewModel(),  lecture: LectureEntity) {
+    val selectedInterests by viewModel.locationState.collectAsState()
+    viewModel.updateLocationForAddress(lecture.edcRdnmadr)
     Box {
-        GoogleMapsSection()
+        selectedInterests?.let { GoogleMapsSection(it) }
         DetailTopAppBarOverlay()
     }
     Scaffold { innerPadding ->
@@ -62,31 +70,32 @@ fun DetailPage(navController: NavController? = null) {
                 .verticalScroll(rememberScrollState())
         ) {
             //Spacer(modifier = Modifier.height(56.dp))
-            InformationCardSection()
+            InformationCardSection(lecture)
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+/*@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailTopAppBar() {
     TopAppBar(
         title = { Text("장소 상세 정보") },
         navigationIcon = {
-            IconButton(onClick = { /* TODO: handle navigation */ }) {
+            IconButton(onClick = { *//* TODO: handle navigation *//* }) {
                 Icon(Icons.Filled.ArrowBack, contentDescription = "뒤로가기")
             }
         }
     )
-}
+}*/
 
 @Composable
-fun GoogleMapsSection() {
+fun GoogleMapsSection(location : Location) {
+
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(
-            LatLng(37.422160, -122.084270),
+            LatLng(location.component1(), location.component2()),
             12f
-        ) // Default to GooglePlex
+        )
     }
 
     GoogleMap(
@@ -115,7 +124,7 @@ fun GoogleMapsSection() {
 }
 
 @Composable
-fun InformationCardSection() {
+fun InformationCardSection(lecture: LectureEntity) {
     val context = LocalContext.current
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -143,7 +152,7 @@ fun InformationCardSection() {
 
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    text = "20",
+                    text = lecture.psncpa,
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier
                         .weight(1f)
@@ -151,7 +160,7 @@ fun InformationCardSection() {
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "30000",
+                    text = lecture.lctreCost,
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier
                         .weight(1f)
@@ -159,7 +168,7 @@ fun InformationCardSection() {
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "선착순",
+                    text = lecture.slctnMthType,
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier
                         .weight(1f)
@@ -183,7 +192,7 @@ fun InformationCardSection() {
 
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    text = "인터넷 현장 접수",
+                    text = lecture.rceptMthType,
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier
                         .weight(1f)
@@ -192,7 +201,7 @@ fun InformationCardSection() {
 
                 )
                 Text(
-                    text = "오프라인",
+                    text = lecture.edcTrgetType,
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier
                         .weight(1f)
@@ -217,7 +226,7 @@ fun InformationCardSection() {
 
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    text = "전라남도 광양 시청",
+                    text = lecture.edcPlace,
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier
                         .weight(1f)
@@ -225,7 +234,7 @@ fun InformationCardSection() {
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "61-28382-3833",
+                    text = lecture.operPhoneNumber,
                     style = MaterialTheme.typography.bodyLarge.copy(
                         color = Color.Blue,
                         fontWeight = FontWeight.Bold
@@ -252,7 +261,7 @@ fun InformationCardSection() {
             }
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    text = "2022-12-03 ~ 2023-02-03",
+                    text = "${lecture.rceptStartDate} ~ ${lecture.rceptEndDate}",
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier
                         .weight(1f)
@@ -271,7 +280,7 @@ fun InformationCardSection() {
             }
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    text = "2022-12-03 ~ 2023-02-03",
+                    text = "${lecture.edcStartDay } ~ ${lecture.edcEndDay}",
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier
                         .weight(1f)
@@ -295,7 +304,7 @@ fun InformationCardSection() {
             }
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    text = "월+화+수+목+금",
+                    text = lecture.operDay,
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier
                         .weight(1f)
@@ -303,7 +312,7 @@ fun InformationCardSection() {
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "10:00 ~ 12:00",
+                    text = "${lecture.edcStartTime} ~ ${lecture.edcColseTime}",
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier
                         .weight(1f)
@@ -323,7 +332,7 @@ fun InformationCardSection() {
             }
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    text = "https://eunoia3jy.tistory.com/206",
+                    text = lecture.homepageUrl,
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier
                         .weight(1f)
@@ -341,7 +350,7 @@ fun InformationCardSection() {
             Spacer(modifier = Modifier.height(10.dp))
 
             CommentSection(
-                teacherName = "User Name",
+                teacherName = lecture.instructorName,
                 profilePicture = "profile_picture_url"
             )
 
@@ -356,7 +365,7 @@ fun InformationCardSection() {
             }
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    text = "엄청조혹엄청조혹엄청조혹엄청조혹엄청조혹엄청조혹엄청조혹엄청조혹엄청조혹엄청조혹엄청조혹엄청조혹엄청조혹엄청조혹엄청조혹엄청조혹엄청조혹엄청조혹엄청조혹엄청조혹엄청조혹엄청조혹엄청조혹엄청조혹",
+                    text = lecture.lctreCo,
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier
                         .weight(1f)
@@ -375,7 +384,7 @@ fun InformationCardSection() {
             }
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    text = "지원됩니다",
+                    text = if (lecture.oadtCtLctreYn == "N") "지원안됩니다" else "지원됩니다",
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier
                         .weight(1f)
@@ -394,7 +403,7 @@ fun InformationCardSection() {
             }
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    text = "안됩니다",
+                    text = if (lecture.pntBankAckestYn == "N") "지원안됩니다" else "지원됩니다",
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier
                         .weight(1f)
@@ -413,7 +422,7 @@ fun InformationCardSection() {
             }
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    text = "안됩니다.",
+                    text = if (lecture.lrnAcnutAckestYn == "N") "지원안됩니다" else "지원됩니다",
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier
                         .weight(1f)
@@ -432,7 +441,7 @@ fun InformationCardSection() {
             }
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    text = "2022-07-21",
+                    text = lecture.referenceDate,
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier
                         .weight(1f)

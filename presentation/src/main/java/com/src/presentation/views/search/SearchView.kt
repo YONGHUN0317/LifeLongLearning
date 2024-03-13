@@ -1,6 +1,7 @@
 package com.src.presentation.views.search
 
 import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -70,7 +71,9 @@ fun SearchView(viewModel: SearchViewModel = hiltViewModel(), navController: NavC
                         title = lecture.lctreNm,
                         location = lecture.edcRdnmadr,
                         date = lecture.edcStartDay
-                    )
+                    ) {
+                        navController?.navigate("lectureInfo/${lecture}")
+                    }
 
                     Log.d("SearchView", "인덱스 $index: ${lecture.lctreNm}")
                 }
@@ -83,9 +86,11 @@ fun SearchView(viewModel: SearchViewModel = hiltViewModel(), navController: NavC
 
 
 @Composable
-fun Item(title: String, location: String, date: String) {
+fun Item(title: String, location: String, date: String, onClick: () -> Unit) {
     Box(
+
         modifier = Modifier
+            .clickable(onClick = onClick)
             .fillMaxSize()
             .padding(horizontal = 20.dp)
             .padding(bottom = 10.dp)
