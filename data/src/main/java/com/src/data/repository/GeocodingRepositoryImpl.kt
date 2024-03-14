@@ -42,7 +42,6 @@ class GeocodingRepositoryImpl @Inject constructor(
                     longitude = 0.0
                 }
             } catch (e: IOException) {
-                // Log and handle exception appropriately
                 Location("").apply {
                     latitude = 0.0
                     longitude = 0.0

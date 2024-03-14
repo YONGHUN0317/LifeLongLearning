@@ -2,13 +2,8 @@ package com.src.presentation.views.onBoarding_location
 
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.maps.model.LatLng
-import com.src.data.repository.GeocodingRepository
-import com.src.data.repository.LocationRepository
 import com.src.domain.usecase.GetAddressFromLocationUseCase
 import com.src.domain.usecase.GetLocationUseCase
 import com.src.domain.usecase.SetLocationUseCase
@@ -33,10 +28,10 @@ class OnBoardingLocationViewModel @Inject constructor(
         viewModelScope.launch {
             val address = getAddressFromLocationUseCase(coordinates.first, coordinates.second).first()
             Log.d("SplashLocationViewModel", "repository: $address")
-            setLocationUseCase(address)
-            getLocationUseCase().collect{ locationValue ->
-                _userLocation.value = locationValue
-            }
+            setLocationUseCase(address, coordinates.first, coordinates.second)
+            /*getLocationUseCase().collect{ locationValue ->
+                _userLocation.value = locationValue.first
+            }*/
         }
     }
 }

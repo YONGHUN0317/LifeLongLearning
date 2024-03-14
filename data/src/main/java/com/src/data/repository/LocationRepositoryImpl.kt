@@ -13,7 +13,7 @@ class LocationRepositoryImpl @Inject constructor(
         emit(localDataSource.getLocation())
     }
 
-    override suspend fun setLocation(location: String, latitude: String, longitude: String) {
+    override suspend fun setLocation(location: String, latitude: Double, longitude: Double) {
         localDataSource.setLocation(location, latitude, longitude)
     }
 }

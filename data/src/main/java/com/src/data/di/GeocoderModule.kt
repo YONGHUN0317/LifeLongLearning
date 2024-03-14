@@ -2,7 +2,10 @@ package com.src.data.di
 
 import android.content.Context
 import android.location.Geocoder
-import com.src.data.repository.GeocodingRepository
+
+import com.src.data.repository.GeocodingRepositoryImpl
+
+
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,7 +22,7 @@ object GeocoderModule {
     }
 
     @Provides
-    fun provideGeocodingRepository(geocoder: Geocoder): GeocodingRepository {
-        return GeocodingRepository(geocoder)
+    fun provideGeocodingRepository(geocoder: Geocoder): GeocodingRepositoryImpl {
+        return GeocodingRepositoryImpl(geocoder)
     }
 }

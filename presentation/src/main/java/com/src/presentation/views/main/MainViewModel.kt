@@ -1,18 +1,13 @@
 package com.src.presentation.views.main
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.src.domain.repository.InterestRepository
 import com.src.domain.usecase.GetLocationUseCase
 import com.src.domain.usecase.GetSelectedInterestsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,14 +16,14 @@ class MainViewModel @Inject constructor(
     private val getSelectedInterestsUseCase: GetSelectedInterestsUseCase,
     private val getLocationUseCase: GetLocationUseCase
 ) : ViewModel() {
-    // Initial states for the flows
+
     private val _selectedInterests = MutableStateFlow<List<String>>(emptyList())
     val selectedInterests: StateFlow<List<String>> = _selectedInterests.asStateFlow()
 
     private val _remainingInterests = MutableStateFlow<List<String>>(emptyList())
     val remainingInterests: StateFlow<List<String>> = _remainingInterests.asStateFlow()
 
-    private val _location = MutableStateFlow<String>("")
+    private val _location = MutableStateFlow("")
     val location: StateFlow<String> = _location.asStateFlow()
 
     init {
@@ -43,7 +38,7 @@ class MainViewModel @Inject constructor(
                 _remainingInterests.value = allInterests - interests.toSet()
             }
             getLocationUseCase().collect{location ->
-                _location.value = location
+                _location.value = location.first
             }
         }
     }

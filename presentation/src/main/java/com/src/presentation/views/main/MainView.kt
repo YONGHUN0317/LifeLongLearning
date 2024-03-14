@@ -25,6 +25,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -48,8 +49,10 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import coil.request.CachePolicy
+import coil.request.ImageRequest
 import com.src.presentation.R
 
 val Pretendard = FontFamily(
@@ -229,12 +232,12 @@ fun MainView(viewModel: MainViewModel = hiltViewModel(),
                                 )
                             }
                             if (index < titles.lastIndex) {
-                                Divider(
-                                    color = Color.White,
+                                HorizontalDivider(
                                     modifier = Modifier
                                         .height(24.dp)
                                         .width(1.dp)
-                                        .padding(vertical = 4.dp)
+                                        .padding(vertical = 4.dp),
+                                    color = Color.White
                                 )
                             }
                         }
@@ -296,14 +299,14 @@ fun getColorResource(interest: String) = when (interest) {
 
 @Composable
 fun Card(name: String, @DrawableRes imageRes: Int, backgroundColor: Color) {
-    val imagePainter = rememberImagePainter(
-        data = imageRes,
-        builder = {
-            memoryCachePolicy(CachePolicy.ENABLED)
-            diskCachePolicy(CachePolicy.ENABLED)
-            crossfade(true) // 이미지 로딩 시 크로스페이드 효과 사용
-        }
-    )
+    val imagePainter = // 이미지 로딩 시 크로스페이드 효과 사용
+        rememberAsyncImagePainter(
+            ImageRequest.Builder(LocalContext.current).data(data = imageRes).apply(block = fun ImageRequest.Builder.() {
+                memoryCachePolicy(CachePolicy.ENABLED)
+                diskCachePolicy(CachePolicy.ENABLED)
+                crossfade(true) // 이미지 로딩 시 크로스페이드 효과 사용
+            }).build()
+        )
     Box(
         modifier = Modifier
             .padding(4.dp)
