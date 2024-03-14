@@ -40,7 +40,7 @@ class LocalDataSourceImpl(private val dataStore: DataStore<Preferences>) : Local
     }
 
     override suspend fun setLocation(location: String, latitude: Double, longitude: Double) {
-        val combinedLocation = "$latitude,$latitude,$longitude"
+        val combinedLocation = "$location,$latitude,$longitude"
         dataStore.edit { preferences ->
             preferences[userLocationKey] = combinedLocation
         }
