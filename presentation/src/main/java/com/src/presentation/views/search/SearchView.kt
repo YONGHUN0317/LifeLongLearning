@@ -36,8 +36,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.google.gson.Gson
 import com.src.domain.model.LectureEntity
 import com.src.presentation.ui.theme.LifeLongLearningTheme
+import java.net.URLEncoder
 
 
 @Composable
@@ -72,7 +74,8 @@ fun SearchView(viewModel: SearchViewModel = hiltViewModel(), navController: NavC
                         location = lecture.edcRdnmadr,
                         date = lecture.edcStartDay
                     ) {
-                        navController?.navigate("lectureInfo/${lecture}")
+                        val lectureJson = Gson().toJson(lecture)
+                        navController?.navigate("lectureInfo/${URLEncoder.encode(lectureJson, "utf-8")}")
                     }
 
                     Log.d("SearchView", "인덱스 $index: ${lecture.lctreNm}")

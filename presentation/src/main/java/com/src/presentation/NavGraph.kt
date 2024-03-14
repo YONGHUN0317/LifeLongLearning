@@ -57,11 +57,13 @@ fun Main() {
         }
 
         composable(
-            "lectureInfo/{lecture}",
-            arguments = listOf(navArgument("lecture") { type = NavType.ParcelableType(LectureEntity::class.java) })
+            "lectureInfo/{lectureJson}",
+            arguments = listOf(navArgument("lectureJson") { type = NavType.StringType })
         ) { backStackEntry ->
-            val lecture = backStackEntry.arguments?.getParcelable<LectureEntity>("lecture")
-            DetailPage(lecture = lecture!!)
+            val lectureJson = backStackEntry.arguments?.getString("lectureJson")
+            lectureJson?.let {
+                DetailPage(lectureJson = it, navController = navController)
+            }
         }
     }
 }

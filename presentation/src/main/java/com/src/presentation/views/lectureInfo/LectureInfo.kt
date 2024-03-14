@@ -1,5 +1,6 @@
 package com.src.presentation.views.lectureInfo
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.location.Location
 import androidx.compose.foundation.Image
@@ -17,7 +18,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -46,55 +46,54 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import android.net.Uri
+import android.util.Log
+import android.widget.Toast
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.location.component1
 import androidx.core.location.component2
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.google.gson.Gson
 import com.src.domain.model.LectureEntity
+import java.net.URLDecoder
 
 
 @Composable
-fun DetailPage(viewModel: LectureInfoViewModel = hiltViewModel(),  lecture: LectureEntity) {
-    val selectedInterests by viewModel.locationState.collectAsState()
+fun DetailPage(viewModel: LectureInfoViewModel = hiltViewModel(),  lectureJson: String, navController: NavController) {
+    val lecture: LectureEntity = Gson().fromJson(URLDecoder.decode(lectureJson, "utf-8"), LectureEntity::class.java)
+    val location by viewModel.locationState.collectAsState()
     viewModel.updateLocationForAddress(lecture.edcRdnmadr)
-    Box {
-        selectedInterests?.let { GoogleMapsSection(it) }
-        DetailTopAppBarOverlay()
-    }
+
     Scaffold { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
         ) {
-            //Spacer(modifier = Modifier.height(56.dp))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(300.dp)
+            ) {
+                location?.let { GoogleMapsSection(it, lecture.edcPlace) }
+                DetailTopAppBarOverlay(navController)
+            }
             InformationCardSection(lecture)
         }
     }
 }
 
-/*@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailTopAppBar() {
-    TopAppBar(
-        title = { Text("장소 상세 정보") },
-        navigationIcon = {
-            IconButton(onClick = { *//* TODO: handle navigation *//* }) {
-                Icon(Icons.Filled.ArrowBack, contentDescription = "뒤로가기")
-            }
-        }
-    )
-}*/
-
-@Composable
-fun GoogleMapsSection(location : Location) {
-
+fun GoogleMapsSection(location : Location, edcPlace : String) {
+    Log.d("DetailPage", "${location.component1()} ${location.component2()} $edcPlace")
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(
             LatLng(location.component1(), location.component2()),
-            12f
+            15f
         )
     }
 
@@ -105,21 +104,22 @@ fun GoogleMapsSection(location : Location) {
             myLocationButtonEnabled = false
         ),
         properties = MapProperties(isMyLocationEnabled = true),
+
         modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
             .zIndex(1f),
         cameraPositionState = cameraPositionState,
     ) {
-        //userLocation?.let { coordinates ->
         Marker(
             state = MarkerState(
                 position = LatLng(
-                    37.422160,
-                    -122.084270
+                    location.component1(),
+                    location.component2()
                 )
             ),
-            title = "평생교육원 위치"
+            title = edcPlace
         )
-        //}
     }
 }
 
@@ -244,7 +244,7 @@ fun InformationCardSection(lecture: LectureEntity) {
                         .padding(start = 4.dp)
                         .clickable {
                             val intent = Intent(Intent.ACTION_DIAL).apply {
-                                //data = Uri.parse("tel:$phoneNumber")
+                                data = Uri.parse("tel:${lecture.operPhoneNumber}")
                             }
                             context.startActivity(intent)
                         }
@@ -338,11 +338,19 @@ fun InformationCardSection(lecture: LectureEntity) {
                         .weight(1f)
                         .padding(start = 4.dp)
                         .clickable {
-                            val intent = Intent(
-                                Intent.ACTION_VIEW,
-                                Uri.parse("https://eunoia3jy.tistory.com/206")
-                            )
-                            context.startActivity(intent) // Use the context to start the activity
+                            if (lecture.homepageUrl.startsWith("http://") || lecture.homepageUrl.startsWith("https://")) {
+                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(lecture.homepageUrl))
+                                context.startActivity(intent)
+                            } else {
+                                val correctedUrl = "http://${lecture.homepageUrl}"
+                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(correctedUrl))
+                                try {
+                                    context.startActivity(intent)
+                                } catch (e: ActivityNotFoundException) {
+                                    Log.e("DetailPage", "Error Url", e)
+                                    Toast.makeText(context,"URL 인텐트를 처리할 활동이 없습니다..", Toast.LENGTH_SHORT).show()
+                                }
+                            }
                         },
                     fontWeight = FontWeight.Bold, color = Color.Blue
                 )
@@ -455,7 +463,7 @@ fun InformationCardSection(lecture: LectureEntity) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailTopAppBarOverlay() {
+fun DetailTopAppBarOverlay(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -464,13 +472,13 @@ fun DetailTopAppBarOverlay() {
         TopAppBar(
             title = { /* 탐색 아이콘만 필요한 경우 제목을 비워둘 수 있습니다.*/ },
             navigationIcon = {
-                IconButton(onClick = { /* TODO: handle navigation */ }) {
-                    Icon(Icons.Filled.ArrowBack, contentDescription = "뒤로가기")
+                IconButton(onClick = { navController.navigate("search") }) {
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "뒤로가기")
                 }
             },
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = Color.Transparent, // 앱바 투명
-                navigationIconContentColor = Color.White,
+                navigationIconContentColor = Color.Black,
                 titleContentColor = Color.Transparent
             )
         )
