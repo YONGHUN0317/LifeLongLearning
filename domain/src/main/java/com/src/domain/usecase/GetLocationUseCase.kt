@@ -7,3 +7,4 @@ import javax.inject.Inject
 class GetLocationUseCase @Inject constructor(private val repository: LocationRepository) {
     operator fun invoke(): Flow<Triple<String, String, String>> = repository.getLocation()
 }
+

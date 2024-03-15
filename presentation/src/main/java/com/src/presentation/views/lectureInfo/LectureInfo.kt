@@ -53,12 +53,15 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.location.component1
 import androidx.core.location.component2
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.google.gson.Gson
 import com.src.domain.model.LectureEntity
+import com.src.presentation.R
+import com.src.presentation.ui.theme.LifeLongLearningTheme
 import java.net.URLDecoder
 
 
@@ -77,7 +80,7 @@ fun DetailPage(viewModel: LectureInfoViewModel = hiltViewModel(),  lectureJson: 
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(300.dp)
+                    .height(350.dp)
             ) {
                 location?.let { GoogleMapsSection(it, lecture.edcPlace) }
                 DetailTopAppBarOverlay(navController)
@@ -359,7 +362,6 @@ fun InformationCardSection(lecture: LectureEntity) {
 
             CommentSection(
                 teacherName = lecture.instructorName,
-                profilePicture = "profile_picture_url"
             )
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -369,7 +371,6 @@ fun InformationCardSection(lecture: LectureEntity) {
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.weight(1f)
                 )
-
             }
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(
@@ -486,7 +487,7 @@ fun DetailTopAppBarOverlay(navController: NavController) {
 }
 
 @Composable
-fun CommentSection(teacherName: String, profilePicture: String) {
+fun CommentSection(teacherName: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -494,7 +495,7 @@ fun CommentSection(teacherName: String, profilePicture: String) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
-            painter = rememberAsyncImagePainter(profilePicture),
+            painter = rememberAsyncImagePainter(R.drawable.profile),
             contentDescription = "Profile Picture",
             modifier = Modifier
                 .size(48.dp)
