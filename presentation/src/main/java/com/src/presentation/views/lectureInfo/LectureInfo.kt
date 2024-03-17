@@ -88,6 +88,8 @@ fun DetailPage(viewModel: LectureInfoViewModel = hiltViewModel(),  lectureJson: 
             InformationCardSection(lecture)
         }
     }
+
+
 }
 
 @Composable
@@ -110,7 +112,7 @@ fun GoogleMapsSection(location : Location, edcPlace : String) {
 
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight()
+            .height(350.dp)
             .zIndex(1f),
         cameraPositionState = cameraPositionState,
     ) {
@@ -137,18 +139,28 @@ fun InformationCardSection(lecture: LectureEntity) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(
+                    text = lecture.lectureName,
+                    style = MaterialTheme.typography.headlineMedium,
+                    modifier = Modifier.weight(1f)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Row(modifier = Modifier.fillMaxWidth()) {
+                Text(
                     text = "강좌 정원 수",
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.weight(1f)
                 )
                 Text(
                     text = "수강료",
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.weight(1f)
                 )
                 Text(
                     text = "선정 방법 구분",
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.weight(1f)
                 )
             }
@@ -471,7 +483,7 @@ fun DetailTopAppBarOverlay(navController: NavController) {
             .zIndex(10f) // 지도 위에 있는지 확인
     ) {
         TopAppBar(
-            title = { /* 탐색 아이콘만 필요한 경우 제목을 비워둘 수 있습니다.*/ },
+            title = { },
             navigationIcon = {
                 IconButton(onClick = { navController.navigate("search") }) {
                     Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "뒤로가기")
