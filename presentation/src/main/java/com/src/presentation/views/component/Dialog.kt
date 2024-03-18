@@ -26,7 +26,7 @@ fun AlertDialog(
             Text(text = dialogText,
                 style = TextStyle(
                     fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold  // Optional, if you also want to set the font weight
+                    fontWeight = FontWeight.Bold
                 )
             )
         },

@@ -24,7 +24,6 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
-        buildConfigField "String", "NAVER_APIKEY", properties["naver_apikey"]
         manifestPlaceholders= [googleMapKey: google_map_key]
     }
 
@@ -109,12 +108,6 @@ dependencies {
 
     // alternatively - without Android dependencies for tests
     testImplementation("androidx.paging:paging-common:$paging_version")
-    // optional - RxJava2 support
-    implementation("androidx.paging:paging-rxjava2:$paging_version")
-    // optional - RxJava3 support
-    implementation("androidx.paging:paging-rxjava3:$paging_version")
-    // optional - Guava ListenableFuture support
-    implementation("androidx.paging:paging-guava:$paging_version")
     // optional - Jetpack Compose integration
     implementation("androidx.paging:paging-compose:1.0.0-alpha18")
 

@@ -81,6 +81,7 @@ fun OnBoardingLocationView(
     var userLocation by remember { mutableStateOf<Pair<Double, Double>?>(null) }
     var query by remember { mutableStateOf("") }
     var suggestions by remember { mutableStateOf(listOf<AutocompletePrediction>()) }
+    val defaultYeouidoLocation = LatLng(37.532600, 126.911300)
     val context = LocalContext.current
     if (!Places.isInitialized()) {
         Places.initialize(context, google_map_key, Locale.getDefault())
@@ -112,17 +113,17 @@ fun OnBoardingLocationView(
 
 
     LaunchedEffect(Unit) {
-        if (ContextCompat.checkSelfPermission(
-                context,
-                ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return@LaunchedEffect
-        }
-        fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
-            val newLatLng = LatLng(location.latitude, location.longitude)
-            cameraPositionState.position = CameraPosition.fromLatLngZoom(newLatLng, 16f)
-            userLocation = Pair(location.latitude, location.longitude)
+        if (ContextCompat.checkSelfPermission(context, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            cameraPositionState.position = CameraPosition.fromLatLngZoom(defaultYeouidoLocation, 16f)
+            userLocation = Pair(defaultYeouidoLocation.latitude, defaultYeouidoLocation.longitude)
+        } else {
+            fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
+                val latLng = location?.let {
+                    LatLng(it.latitude, it.longitude)
+                } ?: defaultYeouidoLocation
+                cameraPositionState.position = CameraPosition.fromLatLngZoom(latLng, 16f)
+                userLocation = Pair(latLng.latitude, latLng.longitude)
+            }
         }
     }
 
@@ -143,7 +144,7 @@ fun OnBoardingLocationView(
                     suggestions = response.autocompletePredictions
                 }
                 .addOnFailureListener { exception ->
-                    Log.e("SplashLocationView", "Error fetching place details: ${exception.message}")
+                    Log.e("SplashLocationView", "장소 세부 정보를 가져오는 중 오류가 발생했습니다: ${exception.message}")
                 }
         }
     }
@@ -236,10 +237,11 @@ fun OnBoardingLocationView(
                 .align(alignment = Alignment.BottomEnd),
             onClick = {
                 fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
-                    val newLatLng = LatLng(location.latitude, location.longitude)
-                    cameraPositionState.position = CameraPosition.fromLatLngZoom(newLatLng, 16f)
-                    userLocation =
-                        Pair(location.latitude, location.longitude)
+                    location?.let {
+                        val newLatLng = LatLng(it.latitude, it.longitude)
+                        cameraPositionState.position = CameraPosition.fromLatLngZoom(newLatLng, 16f)
+                        userLocation = Pair(it.latitude, it.longitude)
+                    }
                 }
             },
             contentColor = SemiBlue,

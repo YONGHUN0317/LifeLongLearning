@@ -89,7 +89,7 @@ fun OnBoardingFirstView(navController: NavController) {
             modifier = Modifier
                 .align(Alignment.Center)
                 .size(268.dp, 372.dp),
-            contentScale = ContentScale.Crop  // 이 부분을 추가했습니다.
+            contentScale = ContentScale.Crop
         )
         val interactionSource = remember { MutableInteractionSource() }
         val isPressed by interactionSource.collectIsPressedAsState()
@@ -102,7 +102,7 @@ fun OnBoardingFirstView(navController: NavController) {
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 50.dp)
                 .size(281.dp, 55.dp),
-            interactionSource = interactionSource, // 이 부분을 추가합니다.
+            interactionSource = interactionSource,
             colors = ButtonDefaults.buttonColors(
                 containerColor = bgColor,
                 contentColor = White
