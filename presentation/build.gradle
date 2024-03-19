@@ -6,9 +6,9 @@ plugins {
     id 'com.google.dagger.hilt.android'
 
 }
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-def google_map_key = properties.getProperty('google_map_key')
+//Properties properties = new Properties()
+//properties.load(project.rootProject.file('local.properties').newDataInputStream())
+//def google_map_key = properties.getProperty('google_map_key')
 android {
     namespace 'com.src.presentation'
     compileSdk 34
@@ -17,14 +17,18 @@ android {
         applicationId "com.src.presentation"
         minSdk 26
         targetSdk 34
-        versionCode 1
-        versionName "1.0"
+        versionCode 6
+        versionName "6"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary true
         }
-        manifestPlaceholders= [googleMapKey: google_map_key]
+        //manifestPlaceholders= [googleMapKey: google_map_key]
+
+        def localProperties = new Properties()
+        localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+        buildConfigField("String", "googleMapKey", localProperties['google_map_key'])
     }
 
     buildTypes {

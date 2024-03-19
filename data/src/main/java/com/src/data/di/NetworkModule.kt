@@ -1,8 +1,5 @@
 package com.src.data.di
 
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonParser
-import com.google.gson.JsonSyntaxException
 import com.src.data.BuildConfig
 import com.src.data.BuildConfig.mongoDBKey
 import com.src.data.datasource.remote.LectureApiService
