@@ -48,12 +48,10 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import android.net.Uri
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.location.component1
 import androidx.core.location.component2
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -61,7 +59,6 @@ import androidx.navigation.NavController
 import com.google.gson.Gson
 import com.src.domain.model.LectureEntity
 import com.src.presentation.R
-import com.src.presentation.ui.theme.LifeLongLearningTheme
 import java.net.URLDecoder
 
 
@@ -485,7 +482,7 @@ fun DetailTopAppBarOverlay(navController: NavController) {
         TopAppBar(
             title = { },
             navigationIcon = {
-                IconButton(onClick = { navController.navigate("search") }) {
+                IconButton(onClick = { navController.popBackStack() }) {
                     Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "뒤로가기")
                 }
             },

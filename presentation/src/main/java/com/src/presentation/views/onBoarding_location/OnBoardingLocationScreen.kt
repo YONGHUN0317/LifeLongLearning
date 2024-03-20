@@ -2,6 +2,7 @@ package com.src.presentation.views.onBoarding_location
 
 import android.content.pm.PackageManager
 import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -30,7 +31,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -65,8 +65,6 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
-import com.src.presentation.BuildConfig
-import com.src.presentation.BuildConfig.google_map_key
 import com.src.presentation.R
 import com.src.presentation.ui.theme.OrangeButton
 import com.src.presentation.ui.theme.OrangeButtonPressed
@@ -84,10 +82,8 @@ fun OnBoardingLocationView(
     var suggestions by remember { mutableStateOf(listOf<AutocompletePrediction>()) }
     val defaultYeouidoLocation = LatLng(37.532600, 126.911300)
     val context = LocalContext.current
-    if (!Places.isInitialized()) {
-        Places.initialize(context, google_map_key, Locale.getDefault())
-    }
-    val location by viewModel.userLocation.collectAsState()
+
+    initializePlaces(context)
     val placesClient: PlacesClient = Places.createClient(context)
     val fusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(LocalContext.current)
@@ -114,8 +110,13 @@ fun OnBoardingLocationView(
 
 
     LaunchedEffect(Unit) {
-        if (ContextCompat.checkSelfPermission(context, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            cameraPositionState.position = CameraPosition.fromLatLngZoom(defaultYeouidoLocation, 16f)
+        if (ContextCompat.checkSelfPermission(
+                context,
+                ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            cameraPositionState.position =
+                CameraPosition.fromLatLngZoom(defaultYeouidoLocation, 16f)
             userLocation = Pair(defaultYeouidoLocation.latitude, defaultYeouidoLocation.longitude)
         } else {
             fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
@@ -149,6 +150,7 @@ fun OnBoardingLocationView(
                 }
         }
     }
+
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -298,6 +300,27 @@ fun OnBoardingLocationView(
                 }
             }
         }
+    }
+}
+
+fun getGoogleMapsApiKey(context: Context): String {
+    return try {
+        val applicationInfo = context.packageManager.getApplicationInfo(
+            context.packageName,
+            PackageManager.GET_META_DATA
+        )
+        applicationInfo.metaData?.getString("com.google.android.geo.API_KEY")
+            ?: throw IllegalStateException("API key not found")
+    } catch (e: Exception) {
+       ""
+    }
+}
+
+
+fun initializePlaces(context: Context) {
+    val apiKey = getGoogleMapsApiKey(context)
+    if (!Places.isInitialized() && apiKey.isNotEmpty()) {
+        Places.initialize(context, apiKey, Locale.getDefault())
     }
 }
 
