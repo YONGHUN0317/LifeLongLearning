@@ -41,11 +41,17 @@ import com.src.domain.model.LectureEntity
 import com.src.presentation.ui.theme.LifeLongLearningTheme
 import java.net.URLEncoder
 
-
+/**
+ * 검색 화면
+ * @param viewModel
+ * @param navController
+ */
 @Composable
 fun SearchView(viewModel: SearchViewModel = hiltViewModel(), navController: NavController? = null) {
     val searchQuery = remember { mutableStateOf("") }
-
+    /**
+     * 검색 
+     */
     Column {
         CustomSearchBar(
             searchQuery = searchQuery.value,
@@ -87,7 +93,14 @@ fun SearchView(viewModel: SearchViewModel = hiltViewModel(), navController: NavC
     }
 }
 
-
+/**
+ * 정보 Item
+ * @param title
+ * @param location
+ * @param date
+ * @param onClick
+ * @receiver
+ */
 @Composable
 fun Item(title: String, location: String, date: String, onClick: () -> Unit) {
     Box(

@@ -6,8 +6,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.src.domain.model.LectureEntity
-import com.src.presentation.views.DetailPage
 import com.src.presentation.views.allow.AllowScreen
 import com.src.presentation.views.lectureInfo.DetailPage
 import com.src.presentation.views.main.MainView
@@ -50,10 +48,6 @@ fun Main() {
         }
         composable("search") {
             SearchView(navController = navController)
-        }
-
-        composable("lectureInfo") {
-            DetailPage()
         }
 
         composable(

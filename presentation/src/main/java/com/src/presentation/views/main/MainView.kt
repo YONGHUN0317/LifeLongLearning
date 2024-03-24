@@ -62,6 +62,9 @@ val Pretendard = FontFamily(
 
 )
 
+/**
+ * 메인 화면 
+ */
 @Composable
 fun MainView(viewModel: MainViewModel = hiltViewModel(),
              navController: NavController) {
@@ -248,6 +251,9 @@ fun MainView(viewModel: MainViewModel = hiltViewModel(),
     }
 }
 
+/**
+ * 선택 시 리플 효과(강조)
+ */
 inline fun Modifier.noRippleClickable(crossinline onClick: () -> Unit): Modifier = composed {
     this.clickable(
         indication = null,
@@ -257,6 +263,9 @@ inline fun Modifier.noRippleClickable(crossinline onClick: () -> Unit): Modifier
     }
 }
 
+/**
+ * 이미지
+ */
 fun getImageResource(interest: String) = when (interest) {
     "요리" -> R.drawable.cooking
     "영어" -> R.drawable.english
@@ -277,6 +286,9 @@ fun getImageResource(interest: String) = when (interest) {
     else -> R.drawable.question_mark
 }
 
+/**
+ * 이미지 배경
+ */
 fun getColorResource(interest: String) = when (interest) {
     "요리" -> R.color.cooking
     "영어" -> R.color.english
@@ -297,6 +309,9 @@ fun getColorResource(interest: String) = when (interest) {
     else -> R.color.white
 }
 
+/**
+ * Card
+ */
 @Composable
 fun Card(name: String, @DrawableRes imageRes: Int, backgroundColor: Color) {
     val imagePainter = // 이미지 로딩 시 크로스페이드 효과 사용

@@ -34,6 +34,11 @@ import com.src.presentation.ui.theme.OrangeButton
 import com.src.presentation.ui.theme.OrangeButtonPressed
 import io.github.muddz.styleabletoast.StyleableToast
 
+/**
+ * 첫 화면
+ *
+ * @param navController
+ */
 @Composable
 fun OnBoardingFirstView(navController: NavController) {
     val context = LocalContext.current

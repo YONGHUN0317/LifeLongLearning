@@ -41,6 +41,12 @@ import com.src.presentation.ui.theme.UnSelected
 import io.github.muddz.styleabletoast.StyleableToast
 import kotlinx.coroutines.launch
 
+/**
+ * 관심사 선택
+ *
+ * @param navController
+ * @param viewModel
+ */
 @Composable
 fun OnBoardingInterestView(navController: NavController, viewModel: OnBoardingInterestViewModel = hiltViewModel()) {
     //SplashInterestViewModel
@@ -144,6 +150,18 @@ fun OnBoardingInterestView(navController: NavController, viewModel: OnBoardingIn
         }
     }
 }
+
+/**
+ * 흥미 선택
+ *
+ * @param text
+ * @param selected
+ * @param onSelected
+ * @param onDeselected
+ * @param modifier
+ * @receiver
+ * @receiver
+ */
 @Composable
 fun InterestButton(
     text: String,

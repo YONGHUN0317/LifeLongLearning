@@ -11,6 +11,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
+/**
+ * 상세 정보 ViewModel
+ */
 @HiltViewModel
 class LectureInfoViewModel @Inject constructor(
     private val getCoordinatesFromAddressUseCase: GetCoordinatesFromAddressUseCase
@@ -18,6 +21,9 @@ class LectureInfoViewModel @Inject constructor(
     private val _locationState = MutableStateFlow<Location?>(null)
     val locationState: StateFlow<Location?> = _locationState
 
+    /**
+     * 주소를 위도 경도로 변환
+     */
     fun updateLocationForAddress(address: String) {
         viewModelScope.launch {
             try {

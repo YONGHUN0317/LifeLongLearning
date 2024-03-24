@@ -11,6 +11,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * Main view model
+ *
+ * @property getSelectedInterestsUseCase
+ * @property getLocationUseCase
+ * @constructor Create empty Main view model
+ */
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val getSelectedInterestsUseCase: GetSelectedInterestsUseCase,
@@ -26,6 +33,9 @@ class MainViewModel @Inject constructor(
     private val _location = MutableStateFlow("")
     val location: StateFlow<String> = _location.asStateFlow()
 
+    /**
+     * 선택한 흥미 데이터 세팅
+     */
     init {
         viewModelScope.launch {
             getSelectedInterestsUseCase().collect { interestsSet ->

@@ -20,6 +20,13 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * Search view model
+ *
+ * @property getLecturesUseCase
+ * @property getSearchUseCase
+ * @constructor Create empty Search view model
+ */
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val getLecturesUseCase: GetLecturesUseCase,

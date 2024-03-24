@@ -14,6 +14,14 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * On boarding location view model
+ *
+ * @property getLocationUseCase
+ * @property setLocationUseCase
+ * @property getAddressFromLocationUseCase
+ * @constructor Create empty On boarding location view model
+ */
 @HiltViewModel
 class OnBoardingLocationViewModel @Inject constructor(
     private val getLocationUseCase: GetLocationUseCase,

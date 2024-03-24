@@ -61,13 +61,17 @@ import com.src.domain.model.LectureEntity
 import com.src.presentation.R
 import java.net.URLDecoder
 
-
+/**
+ * 강의의 상세 페이지를 나타내며 강의의 정보 표시, 지도상의 위치
+ */
 @Composable
 fun DetailPage(viewModel: LectureInfoViewModel = hiltViewModel(),  lectureJson: String, navController: NavController) {
+    // UI에서 사용하기 위해 강의 JSON 문자열을 강의 엔티티 객체로 변환합니다.
     val lecture: LectureEntity = Gson().fromJson(URLDecoder.decode(lectureJson, "utf-8"), LectureEntity::class.java)
     val location by viewModel.locationState.collectAsState()
     viewModel.updateLocationForAddress(lecture.edcRdnmadr)
 
+    // 앱의 상단 표시줄과 콘텐츠 영역을 위한 컨테이너를 제공하는 Scaffold
     Scaffold { innerPadding ->
         Column(
             modifier = Modifier
@@ -89,6 +93,9 @@ fun DetailPage(viewModel: LectureInfoViewModel = hiltViewModel(),  lectureJson: 
 
 }
 
+/**
+ * 상세 페이지 내에 강의의 위치를 포함한 지도 섹션을 표시
+ */
 @Composable
 fun GoogleMapsSection(location : Location, edcPlace : String) {
     Log.d("DetailPage", "${location.component1()} ${location.component2()} $edcPlace")
@@ -125,6 +132,10 @@ fun GoogleMapsSection(location : Location, edcPlace : String) {
     }
 }
 
+
+/**
+ * 자세한 강의 정보를 카드 형식으로 표시하는 섹션을 정의
+ */
 @Composable
 fun InformationCardSection(lecture: LectureEntity) {
     val context = LocalContext.current
@@ -471,6 +482,9 @@ fun InformationCardSection(lecture: LectureEntity) {
     }
 }
 
+/**
+ * 상세 페이지의 상단 앱 바를 탐색 뒤로 아이콘으로 렌더링
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailTopAppBarOverlay(navController: NavController) {
@@ -495,6 +509,9 @@ fun DetailTopAppBarOverlay(navController: NavController) {
     }
 }
 
+/**
+ * 강사 설명
+ */
 @Composable
 fun CommentSection(teacherName: String) {
     Row(

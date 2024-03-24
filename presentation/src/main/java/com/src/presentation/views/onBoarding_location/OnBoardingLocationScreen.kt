@@ -71,7 +71,12 @@ import com.src.presentation.ui.theme.OrangeButtonPressed
 import com.src.presentation.ui.theme.SemiBlue
 import java.util.Locale
 
-
+/**
+ * 사용자가 현재 위치를 확인하거나 선택할 수 있도록 온보딩 위치 보기를 표시하는 구성 가능한 기능
+ *
+ * @param navController
+ * @param viewModel
+ */
 @Composable
 fun OnBoardingLocationView(
     navController: NavController? = null,
@@ -150,8 +155,9 @@ fun OnBoardingLocationView(
                 }
         }
     }
-
-
+    /**
+     *  Google 지도 보기, 검색창, 위치 확인 또는 새로고침 버튼을 포함한 기본 UI 구조
+     */
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -257,7 +263,9 @@ fun OnBoardingLocationView(
             )
         }
     }
-
+    /**
+     *  주소 찾기
+     */
     if (showDialog) {
         Dialog(onDismissRequest = { showDialog = false }) {
             Box(modifier = Modifier.height(200.dp)) {
@@ -303,6 +311,12 @@ fun OnBoardingLocationView(
     }
 }
 
+/**
+ * Get google maps api key
+ *
+ * @param context
+ * @return
+ */
 fun getGoogleMapsApiKey(context: Context): String {
     return try {
         val applicationInfo = context.packageManager.getApplicationInfo(

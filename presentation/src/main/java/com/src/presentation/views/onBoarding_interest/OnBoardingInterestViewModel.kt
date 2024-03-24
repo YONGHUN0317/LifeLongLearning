@@ -12,6 +12,14 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * 관심사 선택 ViewModel
+ *
+ * @property getSelectedInterestsUseCase
+ * @property setSelectedInterestsUseCase
+ * @property updateFirstLaunchUseCase
+ * @constructor Create empty On boarding interest view model
+ */
 @HiltViewModel
 class OnBoardingInterestViewModel @Inject constructor(
     private val getSelectedInterestsUseCase: GetSelectedInterestsUseCase,
@@ -29,7 +37,12 @@ class OnBoardingInterestViewModel @Inject constructor(
             }
         }
     }*/
-
+    /**
+     * 데이터 선택
+     *
+     * @param newInterest
+     * @param isSelected
+     */
     fun updateSelectedInterests(newInterest: String, isSelected: Boolean) {
         val currentInterests = _selectedInterests.value
         val updatedInterests = if (isSelected) {
@@ -44,6 +57,10 @@ class OnBoardingInterestViewModel @Inject constructor(
         }
     }
 
+    /**
+     * 첫 실행 false
+     *
+     */
     fun updateFirstLaunchToFalse() {
         viewModelScope.launch {
             updateFirstLaunchUseCase(false)
